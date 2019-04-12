@@ -1,9 +1,3 @@
-#include <stdio.h>
 #include <SDL.h>
 #include <SDL_image.h>
-//#include "actor.h"
-//struct texture;
-SDL_Window* window;
-SDL_Renderer* renderer;
-//character* mainChar;
-SDL_Texture* texs[1];
+

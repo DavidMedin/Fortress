@@ -6,9 +6,7 @@
 !Files
 !Files/header
 !Files/header/*.h
-!Files/header/client
-!Files/header/client/*.h
 !Files/src
 !Files/src/*.cpp
-!Files/src/client
-!Files/src/client/*.cpp
+!Files/Trash/*.h
+!Files/Trash/*.cpp
