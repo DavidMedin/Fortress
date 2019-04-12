@@ -4,8 +4,10 @@
 
 class actor{
 public:
-
-	actor();
-	~actor();
+	SDL_Texture* actorTexture;
 };
 
+class character : public actor {
+public:
+	character();
+};

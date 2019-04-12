@@ -1,0 +1,14 @@
+*
+
+!.gitignore
+!Data
+!Data/*.png
+!Files
+!Files/header
+!Files/header/*.h
+!Files/header/client
+!Files/header/client/*.h
+!Files/src
+!Files/src/*.cpp
+!Files/src/client
+!Files/src/client/*.cpp
