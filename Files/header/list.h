@@ -1,0 +1,35 @@
+#pragma once
+namespace list {
+	template <typename T> T* AddNode(T*& target) {
+			T* tmpnt = new T();
+
+			if (target != nullptr) {
+				tmpnt->next = target;
+			}
+			target = tmpnt;
+			return tmpnt;
+	}
+	template <typename T> T* DeleteNode(T*& tarList, T*& target) {
+		T* tmpnt = target;
+		if (tarList == target && target->next != nullptr) {
+			tarList = target->next;
+		}
+		else if (tarList == target && target->next == nullptr) {
+			tarList = nullptr;
+		}
+		else {
+			T* inc = tarList;
+			while (inc->next != target) {
+				inc = inc->next;
+			}
+			if (target->next == nullptr) {
+				inc->next = nullptr;
+			}
+			else {
+				inc->next = target->next;
+			}
+		}
+		delete target;
+		return target;
+	}
+}

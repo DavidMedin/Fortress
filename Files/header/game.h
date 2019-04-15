@@ -1,11 +1,10 @@
 #pragma once
 #include <SDL.h>
 #include <SDL_image.h>
-class game
-{
+class game{
 public:
 	
-	static void Start();
+	static 
 private:
 	static SDL_Window* window;
 	static SDL_Renderer* renderer;
