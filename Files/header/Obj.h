@@ -3,7 +3,7 @@
 
 class texture {
 public:
-	SDL_Texture* tex = NULL;
+	SDL_Texture* tex = nullptr;
 	texture* next = nullptr;
 };
 

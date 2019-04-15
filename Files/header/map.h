@@ -14,6 +14,6 @@ class map {
 public:
 	texture* texList = nullptr;
 	room* roomList = nullptr;
-	map(const char* paths...);
+	map(texture* textureList);
 };
 

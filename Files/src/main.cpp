@@ -3,19 +3,8 @@
 //SDL_Texture* ImgLoad(char* path);
 
 void RenderWindow();
-texture* ImgLoad(char* path);
+SDL_Texture* ImgLoad(const char* path);
 
-void test(const char* args...) {
-	va_list argv;
-	va_start(argv, args);
-	printf("%s\n", args);
-	char* itr = va_arg(argv,char*);
-	while (itr != "\0") {
-		printf("%s\n", itr);
-		itr = va_arg(argv, char*);
-	}
-	va_end(argv);
-}
 
 
 int main(int argc, char* argv[]) {
@@ -27,10 +16,12 @@ int main(int argc, char* argv[]) {
 	actorList = nullptr;
 	list::AddNode<Obj>(actorList);
 	loadedTextures = nullptr;
-	//hub = new map("../Data/character.png");
-	//SDL_Surface* boi = IMG_Load("../Data/character.png");
-	//texture* boi = ImgLoad("../Data/Character.png")
-	//test("boi oh boi","hello there","oh, but I am not done yet","\0");
+	texture* texList = nullptr;
+	texture* tmp = list::AddNode<texture>(texList);
+	tmp->tex = ImgLoad("../Data/tile.png");
+
+	
+	hub = new map(tmp);
 	while (1) {
 		//game loop!!!
 		RenderWindow();
@@ -44,18 +35,18 @@ int main(int argc, char* argv[]) {
 void RenderWindow() {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);
 	SDL_RenderClear(renderer);
-
+	
+	//
 
 	SDL_RenderPresent(renderer);
 }
 
-texture* ImgLoad(const char* path) {
-	texture* tmp = new texture;
+SDL_Texture* ImgLoad(const char* path) {
 	SDL_Surface* surface = IMG_Load(path);
-	/*if ((surface = IMG_Load(path)) < 0) {
-		printf("error loading image: %s\n", IMG_GetError()); 
-	}*/
-	tmp->tex = SDL_CreateTextureFromSurface(renderer, surface);
+	if (surface == NULL) {
+		printf("%s, did you forget the zlib.dll?\n", IMG_GetError());
+	}
+	SDL_Texture* tmp = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
 	return tmp;	
 }
