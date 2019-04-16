@@ -4,15 +4,16 @@
 class texture {
 public:
 	SDL_Texture* tex = nullptr;
+	const char* texName = NULL;
 	texture* next = nullptr;
 };
 
 class Obj {
 public:
 	Obj();
-	const char* name;
-	int x, y;
-	texture* tex = nullptr;
+	const char* name = nullptr;
+	SDL_Rect rect;
+	const char* texName = nullptr;
 	Obj* next = nullptr;
 private:
 	int relX, relY;

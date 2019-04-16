@@ -9,7 +9,7 @@
 
 
 Obj* actorList;
-SDL_Texture* loadedTextures;
+texture* loadedTextures;
 SDL_Renderer* renderer;
 SDL_Window* window;
 map* hub;

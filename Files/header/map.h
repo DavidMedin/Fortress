@@ -6,14 +6,15 @@
 class room {
 public:
 	Tile* tileList = nullptr;
+	room* next = nullptr;
 	room();
 };
 
 
 class map {
 public:
-	texture* texList = nullptr;
+	Obj* texList = nullptr; // use the ->name in object for storing strings in lists
 	room* roomList = nullptr;
-	map(texture* textureList);
+	map(room* roomList);
 };
 
