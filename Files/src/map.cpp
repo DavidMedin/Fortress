@@ -2,7 +2,6 @@
 using namespace std;
 extern SDL_Texture* ImgLoad(const char* path);
 
-
 map::map(const char* mapPath) {
 	ifstream mapFile;
 	mapFile.open(mapPath);
@@ -13,6 +12,7 @@ map::map(const char* mapPath) {
 	mapFile.close();
 	roomList = nullptr;
 }
+
 
 room::room() {
 	tileList = nullptr;

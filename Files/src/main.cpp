@@ -13,16 +13,12 @@ int main(int argc, char* argv[]) {
 	window = SDL_CreateWindow("Fortress", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 600, 0);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	
+
 	actorList = nullptr;
-	/*list::AddNode<Obj>(actorList);
-	loadedTextures = nullptr;
-	texture* texList = nullptr;
-	texture* tmp = list::AddNode<texture>(texList);
-	tmp->tex = ImgLoad("../Data/Tile.png");
-*/
-	
 	
 	//hub = new map(tmp);
+
+
 	while (1) {
 		//game loop!!!
 		RenderWindow();
@@ -36,8 +32,6 @@ int main(int argc, char* argv[]) {
 void RenderWindow() {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);
 	SDL_RenderClear(renderer);
-	
-	
 
 	SDL_RenderPresent(renderer);
 }
