@@ -1,4 +1,5 @@
 #include "../header/main.h"
+#include <string>
 //void RenderWindow();
 //SDL_Texture* ImgLoad(char* path);
 
@@ -15,8 +16,8 @@ int main(int argc, char* argv[]) {
 	
 
 	actorList = nullptr;
+	hub = new map("../Data/map.txt");
 	
-	//hub = new map(tmp);
 
 
 	while (1) {

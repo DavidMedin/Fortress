@@ -1,13 +1,15 @@
 #pragma once
 #include <SDL.h>
 #include <fstream>
+#include <string>
+#include <iostream>
 #include "obj.h"
 #include "list.h"
-
 class room {
 public:
 	Tile* tileList = nullptr;
 	room* next = nullptr;
+	int id;
 	room();
 };
 
