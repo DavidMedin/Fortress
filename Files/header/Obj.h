@@ -11,7 +11,7 @@ class Obj {
 public:
 	Obj();
 	const char* name;
-	int x, y;
+	SDL_Rect rect;
 	texture* tex = nullptr;
 	Obj* next = nullptr;
 private:
@@ -22,6 +22,7 @@ private:
 class Tile : public Obj {
 public:
 	bool isWalkable;
+	//Tile(int x, int y, int scale);
 	Tile();
 };
 

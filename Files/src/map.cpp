@@ -1,24 +1,20 @@
 #include "../header/map.h"
-extern texture* ImgLoad(const char* path);
+using namespace std;
+extern SDL_Texture* ImgLoad(const char* path);
 
 
-map::map(texture* textureList) {
-	//eventually, the map will be randomly generated and then find the necessry textures to use, so no input
-	/*va_list args;
-	va_start(args,paths);
-	texture* pmt = list::AddNode<texture>(texList);
-	pmt = ImgLoad(paths);
-	const char* itr = va_arg(args,const char*);
-	while (*itr != '.') {
-		texture* tmp = list::AddNode<texture>(texList);
-		tmp = ImgLoad(itr);
-		va_arg(args, const char);
+map::map(const char* mapPath) {
+	ifstream mapFile;
+	mapFile.open(mapPath);
+	//File formate for .map is (x,y,room,textureName) room starts at 0
+	while (!mapFile.eof()) {
+		char input; //maybe make std::string instead
 	}
-	va_end(args);*/
-	texList = textureList;
+	mapFile.close();
 	roomList = nullptr;
 }
 
 room::room() {
 	tileList = nullptr;
+	//all of the tiles that are to be added to this list will have a standard size, constant
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include <fstream>
 #include "obj.h"
 #include "list.h"
 
@@ -14,6 +15,6 @@ class map {
 public:
 	texture* texList = nullptr;
 	room* roomList = nullptr;
-	map(texture* textureList);
+	map(const char* mapPath);
 };
 

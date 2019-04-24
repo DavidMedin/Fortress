@@ -3,10 +3,9 @@
 !.gitignore
 !Data
 !Data/*.png
+!Data/*.map
 !Files
 !Files/header
 !Files/header/*.h
 !Files/src
 !Files/src/*.cpp
-!Files/Trash/*.h
-!Files/Trash/*.cpp
