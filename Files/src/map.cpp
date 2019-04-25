@@ -5,14 +5,15 @@ extern SDL_Texture* ImgLoad(const char* path);
 map::map(const char* mapPath) {
 	ifstream mapFile;
 	mapFile.open(mapPath);
-	//File formate for .map is (x,y,room,textureName,(optional)NextRoomID ) room starts at 0
+	//File formate for .map is (x,y,room,textureName) room starts at 0
 	string input;
 	while (!mapFile.eof()) {
 		do {
 			input += mapFile.get();
 		} while (input.back() != ',');
-		int dig = stoi(input, nullptr, 0);
-		Tile* tmpTile;
+		
+		int dig = stoi(input, nullptr); //throws exeption
+		Tile* tmpTile = new Tile;
 		tmpTile->rect.x = dig;
 			//create a tile*, and populate it with x,y, and tex name (which will be processed),
 			// when read the id, and if roomList is not null, find the room with the same id, if there is non,
@@ -20,12 +21,12 @@ map::map(const char* mapPath) {
 		do {
 			input += mapFile.get();
 		} while (input.back() != ',');
-		dig = stoi(input, nullptr, 0);
+		dig = stoi(input, nullptr);
 		tmpTile->rect.y = dig;
 		do {
 			input += mapFile.get();
 		} while (input.back() != ',');
-		dig = stoi(input, nullptr, 0);
+		dig = stoi(input, nullptr);
 		if (roomList != nullptr) {
 			room* itr = roomList;
 			do {
@@ -46,9 +47,15 @@ map::map(const char* mapPath) {
 			Tile* temperTile = list::AddNode<Tile>(tmpRoom->tileList);
 			temperTile = tmpTile;
 		}
-		mapFile.get(); //this is for the \n at the end of each line
+		input.clear();
+		do{
+			input += mapFile.get();
+		} while (input.back() != ';');
+		char boi = mapFile.get();
 	}
+	
 	mapFile.close();
+	
 
 }
 
