@@ -4,7 +4,6 @@
 class texture {
 public:
 	SDL_Texture* tex = nullptr;
-	const char* texName = NULL;
 	texture* next = nullptr;
 };
 
@@ -13,7 +12,7 @@ public:
 	Obj();
 	const char* name;
 	SDL_Rect rect;
-	texture* tex = nullptr;
+	const char* texName;
 	Obj* next = nullptr;
 private:
 	int relX, relY;

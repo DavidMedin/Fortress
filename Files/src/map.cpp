@@ -36,7 +36,7 @@ map::map(const char* mapPath) {
 			input += mapFile.get();
 		} while (input.back() != ';');
 		input.pop_back(); //gets rid of the ;
-		tmpTile->tex = input;
+		tmpTile->texName = input.c_str();
 		input.clear();
 		char boi = mapFile.get(); //this is for the newLine at the end of each line (duh)
 
@@ -60,6 +60,7 @@ map::map(const char* mapPath) {
 			room* tmpRoom = list::AddNode<room>(roomList);
 			Tile* temperTile = list::AddNode<Tile>(tmpRoom->tileList);
 			temperTile = tmpTile;
+			printf();
 		}
 
 	}
