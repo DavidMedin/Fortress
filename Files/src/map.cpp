@@ -8,25 +8,39 @@ map::map(const char* mapPath) {
 	//File formate for .map is (x,y,room,textureName) room starts at 0
 	string input;
 	while (!mapFile.eof()) {
-		do {
+		do { // X
 			input += mapFile.get();
 		} while (input.back() != ',');
 		
-		int dig = stoi(input, nullptr); //throws exeption
+		int dig = stoi(input); //numbers first with stoi
 		Tile* tmpTile = new Tile;
 		tmpTile->rect.x = dig;
+		input.clear();
 			//create a tile*, and populate it with x,y, and tex name (which will be processed),
 			// when read the id, and if roomList is not null, find the room with the same id, if there is non,
 			// then make one with that id, otherwise make one with that id
-		do {
+		do { // Y
 			input += mapFile.get();
 		} while (input.back() != ',');
 		dig = stoi(input, nullptr);
 		tmpTile->rect.y = dig;
-		do {
+		input.clear();
+
+		do { // room id
 			input += mapFile.get();
 		} while (input.back() != ',');
-		dig = stoi(input, nullptr);
+		dig = stoi(input);
+		//place here if fails
+		input.clear();
+		do{ // texture name for lookup
+			input += mapFile.get();
+		} while (input.back() != ';');
+		input.pop_back(); //gets rid of the ;
+		tmpTile->tex = input;
+		input.clear();
+		char boi = mapFile.get(); //this is for the newLine at the end of each line (duh)
+
+		//dummy
 		if (roomList != nullptr) {
 			room* itr = roomList;
 			do {
@@ -47,11 +61,7 @@ map::map(const char* mapPath) {
 			Tile* temperTile = list::AddNode<Tile>(tmpRoom->tileList);
 			temperTile = tmpTile;
 		}
-		input.clear();
-		do{
-			input += mapFile.get();
-		} while (input.back() != ';');
-		char boi = mapFile.get();
+
 	}
 	
 	mapFile.close();
