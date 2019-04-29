@@ -9,7 +9,7 @@ class room {
 public:
 	Tile* tileList = nullptr;
 	room* next = nullptr;
-	int id;
+	int id = NULL;
 	room();
 };
 

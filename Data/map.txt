@@ -1,3 +1,4 @@
 0,0,0,../Data/Tile.png;
-0,1,0,../Data/Tile.png;
-0,2,1,../Data/Tile.png;
+0,0,0,../Data/Tile.png;
+0,1,0,../Data/Boi.png;
+0,2,1,../Data/No.png;

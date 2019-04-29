@@ -16,8 +16,18 @@ int main(int argc, char* argv[]) {
 	
 
 	actorList = nullptr;
+	loadedTextures = nullptr;
 	hub = new map("../Data/map.txt");
-	
+	/*room* roomList = nullptr;
+	room* tmpRoom = list::AddNode<room>(roomList);
+	Tile* tmpTile = list::AddNode<Tile>(tmpRoom->tileList);
+	Tile* boi = new Tile;
+	boi->texName = "boi";
+	boi->isWalkable = true;
+	*tmpTile = *boi;
+	*/
+
+
 
 
 	while (1) {
@@ -31,8 +41,37 @@ int main(int argc, char* argv[]) {
 }
 
 void RenderWindow() {
+	Obj* uniqTex = hub->texList;
+	do {// this constructs the loaded texture list
+		texture* loadItr = loadedTextures;
+		do {
+			if (loadItr == nullptr) {
+				list::AddNode<texture>(loadedTextures);
+				loadedTextures->texName = new Obj();
+				loadedTextures->texName->texName = uniqTex->texName;
+				loadedTextures->tex = ImgLoad(uniqTex->texName.c_str());
+				break;
+			}
+			if (uniqTex->texName == loadItr->texName->texName) {
+				break;
+			}
+			loadItr = loadItr->next;
+			if (loadItr == nullptr) {
+				list::AddNode<texture>(loadedTextures);
+				loadedTextures->texName = new Obj();
+				loadedTextures->texName->texName = uniqTex->texName;
+				loadedTextures->tex = ImgLoad(uniqTex->texName.c_str());
+			}
+		} while (loadItr != nullptr);
+		uniqTex = uniqTex->next;
+	} while (uniqTex != nullptr);
+
+	
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);
 	SDL_RenderClear(renderer);
+	
+
+
 
 	SDL_RenderPresent(renderer);
 }

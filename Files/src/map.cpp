@@ -30,23 +30,21 @@ map::map(const char* mapPath) {
 			input += mapFile.get();
 		} while (input.back() != ',');
 		dig = stoi(input);
-		//place here if fails
 		input.clear();
 		do{ // texture name for lookup
 			input += mapFile.get();
 		} while (input.back() != ';');
 		input.pop_back(); //gets rid of the ;
-		tmpTile->texName = input.c_str();
-		input.clear();
-		char boi = mapFile.get(); //this is for the newLine at the end of each line (duh)
+		tmpTile->texName = input;
 
-		//dummy
 		if (roomList != nullptr) {
 			room* itr = roomList;
 			do {
 				if (itr->id == dig) {
-					Tile* temperTile = list::AddNode<Tile>(itr->tileList);
-					temperTile = tmpTile;
+					list::AddNode<Tile>(itr->tileList);
+					Tile* tmpNext = (Tile*)roomList->tileList->next;
+					*roomList->tileList = *tmpTile;
+					roomList->tileList->next = tmpNext;
 					break;
 				}
 				itr = itr->next;
@@ -55,23 +53,52 @@ map::map(const char* mapPath) {
 				goto gelse;
 			}
 		}
-		else {
+		else { //this is if there is not a room with the specified id, or if there is no rooms in roomList
 		gelse:;
 			room* tmpRoom = list::AddNode<room>(roomList);
-			Tile* temperTile = list::AddNode<Tile>(tmpRoom->tileList);
-			temperTile = tmpTile;
-			printf();
+			tmpRoom->id = dig;
+			list::AddNode<Tile>(tmpRoom->tileList);
+			Tile* tmpNext = (Tile*)roomList->tileList->next;
+			*roomList->tileList = *tmpTile;
+			roomList->tileList->next = tmpNext;
 		}
-
+		input.clear();
+		char boi = mapFile.get(); //this is for the newLine at the end of each line (duh)
 	}
-	
 	mapFile.close();
-	
-
+	//map will need a complete list of unique texture paths
+	if (roomList == nullptr) {
+		printf("map.txt is empty\n");
+	}
+	else {
+		room* roomItr = roomList;
+		do {
+			Tile* tileItr = roomItr->tileList;
+			do {// stuck in this loop
+				Obj* texItr = texList;
+				do {
+					if (texItr == nullptr) {
+						list::AddNode<Obj>(texList);
+						texList->texName = tileItr->texName.c_str();
+						break;
+					}
+					if (!strcmp(texItr->texName.c_str(),tileItr->texName.c_str())) {
+						break;
+					}
+					texItr = texItr->next;
+					if (texItr == nullptr) {
+						list::AddNode<Obj>(texList);
+						texList->texName = tileItr->texName.c_str();
+					}
+				} while (texItr != nullptr);
+				tileItr = (Tile*)tileItr->next;
+			} while (tileItr != nullptr);
+			roomItr = roomItr->next;
+		} while (roomItr != nullptr);
+	}
 }
 
 
 room::room() {
-	tileList = nullptr;
-	//all of the tiles that are to be added to this list will have a standard size, constant
+
 }

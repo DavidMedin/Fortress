@@ -9,6 +9,7 @@
 
 
 Obj* actorList;
+Obj* loadTexQue; // get rid of the map texList, this is a global texList
 texture* loadedTextures;
 SDL_Renderer* renderer;
 SDL_Window* window;
