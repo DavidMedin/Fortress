@@ -38,7 +38,7 @@ map::map(const char* mapPath) {
 		tmpTile->texName = input;
 
 		if (roomList != nullptr) {
-			room* itr = roomList;
+			Room* itr = roomList;
 			do {
 				if (itr->id == dig) {
 					list::AddNode<Tile>(itr->tileList);
@@ -55,7 +55,7 @@ map::map(const char* mapPath) {
 		}
 		else { //this is if there is not a room with the specified id, or if there is no rooms in roomList
 		gelse:;
-			room* tmpRoom = list::AddNode<room>(roomList);
+			Room* tmpRoom = list::AddNode<Room>(roomList);
 			tmpRoom->id = dig;
 			list::AddNode<Tile>(tmpRoom->tileList);
 			Tile* tmpNext = (Tile*)roomList->tileList->next;
@@ -71,7 +71,7 @@ map::map(const char* mapPath) {
 		printf("map.txt is empty\n");
 	}
 	else {
-		room* roomItr = roomList;
+		Room* roomItr = roomList;
 		do {
 			Tile* tileItr = roomItr->tileList;
 			do {// stuck in this loop
@@ -95,10 +95,46 @@ map::map(const char* mapPath) {
 			} while (tileItr != nullptr);
 			roomItr = roomItr->next;
 		} while (roomItr != nullptr);
+		roomItr = roomList;
+		do {
+			int maxX = NULL;
+			int maxY = NULL;
+			int minX = NULL;
+			int minY = NULL;
+			Tile* tileItr = roomItr->tileList;
+			do {
+				if (tileItr == roomItr->tileList) {
+					maxX = tileItr->rect.x;
+					maxY = tileItr->rect.y;
+					minX = tileItr->rect.x;
+					minY = tileItr->rect.y;
+				}
+				if (tileItr->rect.x < minX) {
+					minX = tileItr->rect.x;
+				}
+				else if (tileItr->rect.x > maxX) {
+					maxX = tileItr->rect.x;
+				}
+				if (tileItr->rect.y < minY) {
+					minY = tileItr->rect.y;
+				}
+				else if (tileItr->rect.y > maxY) {
+					maxY = tileItr->rect.y;
+				}
+				tileItr = (Tile*)tileItr->next;
+			} while (tileItr != nullptr);
+			roomItr->width = maxX - minX;
+			roomItr->height = maxY - minY;
+			if (roomItr->width <= 0) roomItr->width = 1;
+			if (roomItr->height <= 0) roomItr->height = 1;
+			roomItr = roomItr->next;
+		} while (roomItr != nullptr);
 	}
+	
+
 }
 
 
-room::room() {
+Room::Room() {
 
 }

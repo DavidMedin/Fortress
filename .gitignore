@@ -3,7 +3,7 @@
 !.gitignore
 !Data
 !Data/*.png
-!Data/*.txt
+!Data/*.map
 !Files
 !Files/header
 !Files/header/*.h

@@ -5,19 +5,21 @@
 #include <iostream>
 #include "obj.h"
 #include "list.h"
-class room {
+class Room {
 public:
 	Tile* tileList = nullptr;
-	room* next = nullptr;
+	Room* next = nullptr;
 	int id = NULL;
-	room();
+	int height = NULL;
+	int width = NULL;
+	Room();
 };
 
 
 class map {
 public:
 	Obj* texList = nullptr; // use the ->name in object for storing strings in lists
-	room* roomList = nullptr;
+	Room* roomList = nullptr;
 	map(const char* mapPath);
 
 };
