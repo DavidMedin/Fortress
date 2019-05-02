@@ -45,7 +45,17 @@ void RenderWindow() {
 	SDL_RenderClear(renderer);
 	
 	//map rendering
-	
+	SDL_Rect tmpRect;
+	Room* roomItr = targetMap->roomList;
+	do {
+		Tile* tileItr = roomItr->tileList;
+		do {
+			tmpRect = tileItr->rect;
+			tmpRect.w = tileItr->rect.w 
+			tileItr = (Tile*)tileItr->next;
+		} while (tileItr != nullptr);
+		roomItr = roomItr->next;
+	} while (roomItr != nullptr);
 
 	SDL_RenderPresent(renderer);
 }
