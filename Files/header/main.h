@@ -10,8 +10,8 @@
 SDL_DisplayMode DM;
 
 Obj* objList; //might need to add a 'render this' bool to obj tho
-texture* loadedTextures; // doesn't include the map textures
-texture* mapLoadTexes;
+Texture* loadedTextures; // doesn't include the map textures
+Texture* mapLoadTexes;
 SDL_Renderer* renderer;
 SDL_Window* window;
 map* hub;

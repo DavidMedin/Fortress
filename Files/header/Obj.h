@@ -16,11 +16,11 @@ private:
 
 };
 
-class texture {
+class Texture {
 public:
 	Obj* texName = nullptr;
 	SDL_Texture* tex = nullptr;
-	texture* next = nullptr;
+	Texture* next = nullptr;
 };
 
 class Tile : public Obj {

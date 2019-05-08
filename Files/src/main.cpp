@@ -42,40 +42,52 @@ int main(int argc, char* argv[]) {
 }
 
 void RenderWindow() {	
-	Room* roomItr = targetMap->roomList;
-	do {
-		Tile* tileItr = roomItr->tileList;
-		do {
-			//add conditional that if tile is within the 'camera' view, then add to list
-			texture* mapTexItr = mapLoadTexes;
+	Obj* texItr = targetMap->texList;
+	do{
+		Texture* mapLoadItr = mapLoadTexes;
+		if (mapLoadTexes != nullptr) {
 			do {
-				
-				//maybe make a function for populating a list of unique items of a specific type
+				if (mapLoadTexes->texName->texName == texItr->texName) {
+					break;
+				}
+				mapLoadItr = mapLoadItr->next;
+			} while (mapLoadItr != nullptr);
+		}
+		if (mapLoadItr == nullptr) {
+			list::AddNode<Texture>(mapLoadTexes);
+			mapLoadTexes->texName = new Obj();
+			mapLoadTexes->texName->texName = texItr->texName;
+			mapLoadTexes->tex = ImgLoad(texItr->texName.c_str());
+		}
 
-				mapTexItr = mapTexItr->next;
-			} while (mapTexItr != nullptr);
-			tileItr = (Tile*)tileItr->next;
-		} while (tileItr != nullptr);
-		roomItr = roomItr->next;
-	} while (roomItr != nullptr);
-	
+		texItr = texItr->next;
+	}while (texItr != nullptr);
+
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);
 	SDL_RenderClear(renderer);
 	
 	//map rendering
 	// w / roomW * ScreenWidth
 	SDL_Rect tmpRect;
-	roomItr = targetMap->roomList;
+	Room* roomItr = targetMap->roomList;
 	do {
 		Tile* tileItr = roomItr->tileList;
 		do {
+			SDL_Texture* tmpTex = nullptr;
+			Texture* texLoop = mapLoadTexes;
+			do {
+				if (texLoop->texName->texName == tileItr->texName) {
+					tmpTex = texLoop->tex;
+					break;
+				}
+				texLoop = texLoop->next;
+			} while (texLoop != nullptr);
+			int w, h;
+			SDL_QueryTexture(tmpTex, NULL, NULL, &w, &h);
 			tmpRect = tileItr->rect;
-			tmpRect.w = tileItr->rect.w / roomItr->width * DM.w;
-			tmpRect.h = tileItr->rect.h / roomItr->height * DM.h;
-			tmpRect.x = tileItr->rect.x;
-			tmpRect.y = tileItr->rect.y;
-			SDL_Texture* tmpTex = 
-			SDL_RenderCopy(renderer,/*texture*/, NULL, &tmpRect);
+			tmpRect.w = w / roomItr->width * DM.w;
+			tmpRect.h = h / roomItr->height * DM.h;
+			SDL_RenderCopy(renderer, tmpTex, NULL, &tmpRect);
 			tileItr = (Tile*)tileItr->next;
 		} while (tileItr != nullptr);
 		roomItr = roomItr->next;

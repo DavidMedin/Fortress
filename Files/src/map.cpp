@@ -123,10 +123,9 @@ map::map(const char* mapPath) {
 				}
 				tileItr = (Tile*)tileItr->next;
 			} while (tileItr != nullptr);
-			roomItr->width = maxX - minX;
-			roomItr->height = maxY - minY;
-			if (roomItr->width <= 0) roomItr->width = 1;
-			if (roomItr->height <= 0) roomItr->height = 1;
+			roomItr->width = maxX - minX + 1;
+			roomItr->height = maxY - minY + 1;
+			
 			roomItr = roomItr->next;
 		} while (roomItr != nullptr);
 	}
