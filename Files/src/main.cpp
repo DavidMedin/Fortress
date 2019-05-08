@@ -85,8 +85,12 @@ void RenderWindow() {
 			int w, h;
 			SDL_QueryTexture(tmpTex, NULL, NULL, &w, &h);
 			tmpRect = tileItr->rect;
-			tmpRect.w = w / roomItr->width * DM.w;
-			tmpRect.h = h / roomItr->height * DM.h;
+			int targetSize = w < h ? h : w;
+			// screen width / w
+			tmpRect.w = DM.w / roomItr->width;
+			tmpRect.h = DM.h / roomItr->height;
+			tmpRect.x = tileItr->rect.x * targetSize;
+			tmpRect.y = tileItr->rect.y * targetSize;
 			SDL_RenderCopy(renderer, tmpTex, NULL, &tmpRect);
 			tileItr = (Tile*)tileItr->next;
 		} while (tileItr != nullptr);

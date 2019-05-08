@@ -2,6 +2,9 @@
 using namespace std;
 extern SDL_Texture* ImgLoad(const char* path);
 
+// standard black size is 32
+
+
 map::map(const char* mapPath) {
 	ifstream mapFile;
 	mapFile.open(mapPath);
