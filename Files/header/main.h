@@ -12,6 +12,9 @@
 #define HEIGHT 600
 
 
+int offX = 0;
+int offY = 0;
+float scale = 1;
 
 SDL_DisplayMode DM; // only really need for fullscreen mode
 

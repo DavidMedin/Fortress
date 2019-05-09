@@ -28,12 +28,30 @@ int main(int argc, char* argv[]) {
 	*tmpTile = *boi;
 	*/
 
-
+	const Uint8* state = SDL_GetKeyboardState(NULL);
 	SDL_Event event; 
 
 	while (1) {
 		//game loop!!!
 		SDL_PollEvent(&event);
+		if (state[SDL_SCANCODE_A]) {
+			offX -= 5;
+		}
+		if (state[SDL_SCANCODE_D]) {
+			offX += 5;
+		}
+		if (state[SDL_SCANCODE_W]) {
+			offY -= 5;
+		}
+		if (state[SDL_SCANCODE_S]) {
+			offY += 5;
+		}
+		if (state[SDL_SCANCODE_Q]) {
+			scale += .1;
+		}
+		if (state[SDL_SCANCODE_E]) {
+			scale -= .1;
+		}
 		RenderWindow();
 		
 
@@ -90,14 +108,14 @@ void RenderWindow() {
 			// screen width / w
 			//tmpRect.w *= WIDTH / roomItr->width;
 			//tmpRect.h *= HEIGHT / roomItr->height;
-			tmpRect.w = tileItr->rect.w;
-			tmpRect.h = tileItr->rect.h;
-			tmpRect.x = tileItr->rect.x;
+			tmpRect.w = tileItr->rect.w * scale;
+			tmpRect.h = tileItr->rect.h * scale;
+			tmpRect.x = tileItr->rect.x - offX * scale;
+			tmpRect.y = tileItr->rect.y - offY * scale;
 			// next step is to only have one room existing, and turn off scaling, make sure that it renders good
 			// next make a relative coord system and move the camera
 			// then add scaling of camera
 			// test multiple rooms
-			tmpRect.y = tileItr->rect.y;
 			SDL_RenderCopy(renderer, tmpTex, NULL, &tmpRect);
 			tileItr = (Tile*)tileItr->next;
 		} while (tileItr != nullptr);
