@@ -39,7 +39,10 @@ map::map(const char* mapPath) {
 		} while (input.back() != ';');
 		input.pop_back(); //gets rid of the ;
 		tmpTile->texName = input;
-
+		SDL_Surface* surf = IMG_Load(input.c_str());
+		tmpTile->rect.w = surf->w;
+		tmpTile->rect.h = surf->h;
+		SDL_FreeSurface(surf);
 		if (roomList != nullptr) {
 			Room* itr = roomList;
 			do {
@@ -107,27 +110,27 @@ map::map(const char* mapPath) {
 			Tile* tileItr = roomItr->tileList;
 			do {
 				if (tileItr == roomItr->tileList) {
-					maxX = tileItr->rect.x;
-					maxY = tileItr->rect.y;
+					maxX = tileItr->rect.x + tileItr->rect.w;
+					maxY = tileItr->rect.y + tileItr->rect.h;
 					minX = tileItr->rect.x;
 					minY = tileItr->rect.y;
 				}
 				if (tileItr->rect.x < minX) {
 					minX = tileItr->rect.x;
 				}
-				else if (tileItr->rect.x > maxX) {
+				else if (tileItr->rect.x + tileItr->rect.w > maxX) {
 					maxX = tileItr->rect.x;
 				}
 				if (tileItr->rect.y < minY) {
 					minY = tileItr->rect.y;
 				}
-				else if (tileItr->rect.y > maxY) {
+				else if (tileItr->rect.y + tileItr->rect.h > maxY) {
 					maxY = tileItr->rect.y;
 				}
 				tileItr = (Tile*)tileItr->next;
 			} while (tileItr != nullptr);
-			roomItr->width = maxX - minX + 1;
-			roomItr->height = maxY - minY + 1;
+			roomItr->width = maxX - minX;
+			roomItr->height = maxY - minY;
 			
 			roomItr = roomItr->next;
 		} while (roomItr != nullptr);

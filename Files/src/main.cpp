@@ -11,10 +11,10 @@ map* targetMap;
 int main(int argc, char* argv[]) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_PNG);
-	window = SDL_CreateWindow("Fortress", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 600, 0);
+	window = SDL_CreateWindow("Fortress", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_GetCurrentDisplayMode(0, &DM);
-
+	
 	loadedTextures = nullptr;
 	mapLoadTexes = nullptr;
 	hub = new map("../Data/map.map");
@@ -29,10 +29,11 @@ int main(int argc, char* argv[]) {
 	*/
 
 
-
+	SDL_Event event; 
 
 	while (1) {
 		//game loop!!!
+		SDL_PollEvent(&event);
 		RenderWindow();
 		
 
@@ -87,10 +88,16 @@ void RenderWindow() {
 			tmpRect = tileItr->rect;
 			int targetSize = w < h ? h : w;
 			// screen width / w
-			tmpRect.w = DM.w / roomItr->width;
-			tmpRect.h = DM.h / roomItr->height;
-			tmpRect.x = tileItr->rect.x * targetSize;
-			tmpRect.y = tileItr->rect.y * targetSize;
+			//tmpRect.w *= WIDTH / roomItr->width;
+			//tmpRect.h *= HEIGHT / roomItr->height;
+			tmpRect.w = tileItr->rect.w;
+			tmpRect.h = tileItr->rect.h;
+			tmpRect.x = tileItr->rect.x;
+			// next step is to only have one room existing, and turn off scaling, make sure that it renders good
+			// next make a relative coord system and move the camera
+			// then add scaling of camera
+			// test multiple rooms
+			tmpRect.y = tileItr->rect.y;
 			SDL_RenderCopy(renderer, tmpTex, NULL, &tmpRect);
 			tileItr = (Tile*)tileItr->next;
 		} while (tileItr != nullptr);
