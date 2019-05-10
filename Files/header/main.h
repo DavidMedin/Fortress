@@ -4,11 +4,13 @@
 #include <SDL_render.h>
 #include <SDL_error.h>
 #include <SDL_video.h>
+#include <conio.h>
 //#include <SDL_image.h>
 #include "list.h"
 #include "map.h"
 #include "Timer.h"
-
+#include "Keyboard.h"
+#include "TileEdit.h"
 #define INIT_WIDTH 600
 #define INIT_HEIGHT 600
 
@@ -28,3 +30,5 @@ Map* hub;
 
 Map* targetMap;
 Room* targetRoom;
+
+bool isEdit = true;

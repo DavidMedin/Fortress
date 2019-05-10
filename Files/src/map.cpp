@@ -119,13 +119,13 @@ Map::Map(const char* mapPath) {
 					minX = tileItr->rect.x;
 				}
 				else if (tileItr->rect.x + tileItr->rect.w > maxX) {
-					maxX = tileItr->rect.x;
+					maxX = tileItr->rect.x + tileItr->rect.w;
 				}
 				if (tileItr->rect.y < minY) {
 					minY = tileItr->rect.y;
 				}
 				else if (tileItr->rect.y + tileItr->rect.h > maxY) {
-					maxY = tileItr->rect.y;
+					maxY = tileItr->rect.y + tileItr->rect.h;
 				}
 				tileItr = (Tile*)tileItr->next;
 			} while (tileItr != nullptr);

@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	
 	loadedTextures = nullptr;
 	mapLoadTexes = nullptr;
-	hub = new Map("../Data/map.map");
+	hub = new Map("Data/map.map");
 	targetMap = hub;
 	targetRoom = targetMap->roomList;
 	/*room* roomList = nullptr;
@@ -56,28 +56,36 @@ int main(int argc, char* argv[]) {
 				offY += 1;
 				did = true;
 			}
-			/*if (state[SDL_SCANCODE_Q]) {
-				scale += .01f;
-				did = true;
+			if (isDownOnce(state,SDL_SCANCODE_P) == 1) {
+				isEdit = !isEdit;
 			}
-			if (state[SDL_SCANCODE_E]) {
-				scale -= .01f;
-				did = true;
-			}*/
-			if (did == true) {
+			if (did) {
 				moveTime->ResetTime();
 			}
 			did = false;
 		}
-		
 		moveTime->UpdateTime();
-		RenderWindow();
 		
+		if (isEdit) {
+			int x, y;
+			SDL_GetMouseState(&x, &y);
 
+		}
+		
+		RenderWindow();
 	}
 	SDL_Quit();
 	return 0;
 }
+
+void CheckCommand() {
+	static char* input = nullptr;
+	/*if (input == nullptr) {
+		return;
+	}*/
+	
+}
+
 
 void RenderWindow() {	
 	Obj* texItr = targetMap->texList;
@@ -123,7 +131,8 @@ void RenderWindow() {
 			SDL_GetWindowSize(window, &w, &h);
 			tmpRect = tileItr->rect;
 			int targetLength = targetRoom->width > targetRoom->height ? targetRoom->width : targetRoom->height;
-			scale = float((targetRoom->width == targetLength ? w : h) / targetLength);
+			
+			scale = float((targetRoom->width == targetLength ? w : h)) / float(targetLength);
 			
 			// screen width / w
 			//tmpRect.w *= WIDTH / roomItr->width;

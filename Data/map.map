@@ -1,2 +1,9 @@
-0,0,0,../Data/Dirt.png;
-0,32,0,../Data/Firt.png;
+0,0,0,Data/Dirt.png;
+0,32,0,Data/Firt.png;
+0,64,0,Data/Firt.png;
+0,96,0,Data/Firt.png;
+32,0,0,Data/Firt.png;
+32,0,0,Data/Grass.png;
+64,0,0,Data/Grass.png;
+96,0,0,Data/Grass.png;
+128,0,0,Data/Grass.png;
