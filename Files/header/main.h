@@ -7,9 +7,10 @@
 //#include <SDL_image.h>
 #include "list.h"
 #include "map.h"
+#include "Timer.h"
 
-#define WIDTH 600
-#define HEIGHT 600
+#define INIT_WIDTH 600
+#define INIT_HEIGHT 600
 
 
 int offX = 0;
@@ -23,4 +24,7 @@ Texture* loadedTextures; // doesn't include the map textures
 Texture* mapLoadTexes;
 SDL_Renderer* renderer;
 SDL_Window* window;
-map* hub;
+Map* hub;
+
+Map* targetMap;
+Room* targetRoom;

@@ -1,7 +1,7 @@
 #include "../header/Timer.h"
 #include <SDL_timer.h>
 
-void Timer::TimeInit() {
+Timer::Timer() {
 	temptime = SDL_GetTicks();
 	time = SDL_GetTicks();
 }

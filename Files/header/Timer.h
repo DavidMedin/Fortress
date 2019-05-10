@@ -4,7 +4,7 @@ class Timer {
 public:
 	 int time;
 	 int temptime;
-	 void TimeInit();
 	 void UpdateTime();
 	 void ResetTime();
+	 Timer();
 };

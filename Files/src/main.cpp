@@ -5,20 +5,21 @@
 
 void RenderWindow();
 SDL_Texture* ImgLoad(const char* path);
-map* targetMap;
+
 
 
 int main(int argc, char* argv[]) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_PNG);
-	window = SDL_CreateWindow("Fortress", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
+	window = SDL_CreateWindow("Fortress", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, INIT_WIDTH, INIT_HEIGHT, SDL_WINDOW_RESIZABLE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_GetCurrentDisplayMode(0, &DM);
 	
 	loadedTextures = nullptr;
 	mapLoadTexes = nullptr;
-	hub = new map("../Data/map.map");
+	hub = new Map("../Data/map.map");
 	targetMap = hub;
+	targetRoom = targetMap->roomList;
 	/*room* roomList = nullptr;
 	room* tmpRoom = list::AddNode<room>(roomList);
 	Tile* tmpTile = list::AddNode<Tile>(tmpRoom->tileList);
@@ -28,30 +29,48 @@ int main(int argc, char* argv[]) {
 	*tmpTile = *boi;
 	*/
 
+	Timer* moveTime = new Timer();
+	int speed = 2;
+
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 	SDL_Event event; 
 
 	while (1) {
 		//game loop!!!
 		SDL_PollEvent(&event);
-		if (state[SDL_SCANCODE_A]) {
-			offX -= 5;
+		if (moveTime->time >= speed) {
+			bool did = false;
+			if (state[SDL_SCANCODE_A]) {
+				offX -= 1;
+				did = true;
+			}
+			if (state[SDL_SCANCODE_D]) {
+				offX += 1;
+				did = true;
+			}
+			if (state[SDL_SCANCODE_W]) {
+				offY -= 1;
+				did = true;
+			}
+			if (state[SDL_SCANCODE_S]) {
+				offY += 1;
+				did = true;
+			}
+			/*if (state[SDL_SCANCODE_Q]) {
+				scale += .01f;
+				did = true;
+			}
+			if (state[SDL_SCANCODE_E]) {
+				scale -= .01f;
+				did = true;
+			}*/
+			if (did == true) {
+				moveTime->ResetTime();
+			}
+			did = false;
 		}
-		if (state[SDL_SCANCODE_D]) {
-			offX += 5;
-		}
-		if (state[SDL_SCANCODE_W]) {
-			offY -= 5;
-		}
-		if (state[SDL_SCANCODE_S]) {
-			offY += 5;
-		}
-		if (state[SDL_SCANCODE_Q]) {
-			scale += .1;
-		}
-		if (state[SDL_SCANCODE_E]) {
-			scale -= .1;
-		}
+		
+		moveTime->UpdateTime();
 		RenderWindow();
 		
 
@@ -88,9 +107,8 @@ void RenderWindow() {
 	//map rendering
 	// w / roomW * ScreenWidth
 	SDL_Rect tmpRect;
-	Room* roomItr = targetMap->roomList;
-	do {
-		Tile* tileItr = roomItr->tileList;
+	
+		Tile* tileItr = targetRoom->tileList;
 		do {
 			SDL_Texture* tmpTex = nullptr;
 			Texture* texLoop = mapLoadTexes;
@@ -102,25 +120,25 @@ void RenderWindow() {
 				texLoop = texLoop->next;
 			} while (texLoop != nullptr);
 			int w, h;
-			SDL_QueryTexture(tmpTex, NULL, NULL, &w, &h);
+			SDL_GetWindowSize(window, &w, &h);
 			tmpRect = tileItr->rect;
-			int targetSize = w < h ? h : w;
+			int targetLength = targetRoom->width > targetRoom->height ? targetRoom->width : targetRoom->height;
+			scale = float((targetRoom->width == targetLength ? w : h) / targetLength);
+			
 			// screen width / w
 			//tmpRect.w *= WIDTH / roomItr->width;
 			//tmpRect.h *= HEIGHT / roomItr->height;
-			tmpRect.w = tileItr->rect.w * scale;
-			tmpRect.h = tileItr->rect.h * scale;
-			tmpRect.x = tileItr->rect.x - offX * scale;
-			tmpRect.y = tileItr->rect.y - offY * scale;
-			// next step is to only have one room existing, and turn off scaling, make sure that it renders good
+			tmpRect.w = (int)ceil(float(tileItr->rect.w) * scale);
+			tmpRect.h = (int)ceil(float(tileItr->rect.h) * scale);
+			tmpRect.x = (int)floor(float(tileItr->rect.x - offX) * scale);
+			tmpRect.y = (int)floor(float(tileItr->rect.y - offY) * scale);
+			
 			// next make a relative coord system and move the camera
 			// then add scaling of camera
 			// test multiple rooms
 			SDL_RenderCopy(renderer, tmpTex, NULL, &tmpRect);
 			tileItr = (Tile*)tileItr->next;
 		} while (tileItr != nullptr);
-		roomItr = roomItr->next;
-	} while (roomItr != nullptr);
 	
 	SDL_RenderPresent(renderer);
 }

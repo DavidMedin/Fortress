@@ -17,11 +17,11 @@ public:
 };
 
 
-class map {
+class Map {
 public:
 	Obj* texList = nullptr; // use the ->name in object for storing strings in lists
 	Room* roomList = nullptr;
-	map(const char* mapPath);
+	Map(const char* mapPath);
 
 };
 

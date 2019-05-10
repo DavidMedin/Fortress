@@ -5,7 +5,7 @@ extern SDL_Texture* ImgLoad(const char* path);
 // standard black size is 32
 
 
-map::map(const char* mapPath) {
+Map::Map(const char* mapPath) {
 	ifstream mapFile;
 	mapFile.open(mapPath);
 	//File formate for .map is (x,y,room,textureName) room starts at 0
