@@ -11,8 +11,10 @@
 #include "Timer.h"
 #include "Keyboard.h"
 #include "TileEdit.h"
-#define INIT_WIDTH 600
-#define INIT_HEIGHT 600
+#define INIT_WIDTH 900
+#define INIT_HEIGHT 900
+#define BASE_SIZE 32
+
 
 
 int offX = 0;

@@ -6,6 +6,7 @@ extern SDL_Texture* ImgLoad(const char* path);
 
 
 Map::Map(const char* mapPath) {
+	path = mapPath;
 	ifstream mapFile;
 	mapFile.open(mapPath);
 	//File formate for .map is (x,y,room,textureName) room starts at 0
@@ -69,7 +70,7 @@ Map::Map(const char* mapPath) {
 			roomList->tileList->next = tmpNext;
 		}
 		input.clear();
-		char boi = mapFile.get(); //this is for the newLine at the end of each line (duh)
+		char trash = mapFile.get(); //this is for the newLine at the end of each line (duh)
 	}
 	mapFile.close();
 	//map will need a complete list of unique texture paths
@@ -80,7 +81,7 @@ Map::Map(const char* mapPath) {
 		Room* roomItr = roomList;
 		do {
 			Tile* tileItr = roomItr->tileList;
-			do {// stuck in this loop
+			do {
 				Obj* texItr = texList;
 				do {
 					if (texItr == nullptr) {
@@ -101,37 +102,10 @@ Map::Map(const char* mapPath) {
 			} while (tileItr != nullptr);
 			roomItr = roomItr->next;
 		} while (roomItr != nullptr);
+
 		roomItr = roomList;
 		do {
-			int maxX = NULL;
-			int maxY = NULL;
-			int minX = NULL;
-			int minY = NULL;
-			Tile* tileItr = roomItr->tileList;
-			do {
-				if (tileItr == roomItr->tileList) {
-					maxX = tileItr->rect.x + tileItr->rect.w;
-					maxY = tileItr->rect.y + tileItr->rect.h;
-					minX = tileItr->rect.x;
-					minY = tileItr->rect.y;
-				}
-				if (tileItr->rect.x < minX) {
-					minX = tileItr->rect.x;
-				}
-				else if (tileItr->rect.x + tileItr->rect.w > maxX) {
-					maxX = tileItr->rect.x + tileItr->rect.w;
-				}
-				if (tileItr->rect.y < minY) {
-					minY = tileItr->rect.y;
-				}
-				else if (tileItr->rect.y + tileItr->rect.h > maxY) {
-					maxY = tileItr->rect.y + tileItr->rect.h;
-				}
-				tileItr = (Tile*)tileItr->next;
-			} while (tileItr != nullptr);
-			roomItr->width = maxX - minX;
-			roomItr->height = maxY - minY;
-			
+			roomItr->RecalcSize();
 			roomItr = roomItr->next;
 		} while (roomItr != nullptr);
 	}
@@ -139,7 +113,87 @@ Map::Map(const char* mapPath) {
 
 }
 
+void Map::AddTile(int x, int y, int room, const char* path) {
+	Room* targetRoom = nullptr;
+	Room* tmpRoom = roomList;
+	do {
+		if (tmpRoom->id == room) {
+			targetRoom = tmpRoom;
+			break;
+		}
+		tmpRoom = tmpRoom->next;
+	} while (tmpRoom != nullptr);
+	if (targetRoom == nullptr) {
+		targetRoom = list::AddNode<Room>(roomList);
+		targetRoom->id = room;
+	}
+	list::AddNode<Tile>(targetRoom->tileList);
+	targetRoom->tileList->texName = path;
+	targetRoom->tileList->rect.x = x;
+	targetRoom->tileList->rect.y = y;
+	SDL_Surface* surf = IMG_Load(path);
+	targetRoom->tileList->rect.w = surf->w;
+	targetRoom->tileList->rect.h = surf->h;
+	SDL_FreeSurface(surf);
+}
 
 Room::Room() {
 
+}
+
+void Room::RecalcSize() {
+	int maxX = NULL;
+	int maxY = NULL;
+	int minX = NULL;
+	int minY = NULL;
+	Tile* tileItr = tileList;
+	do {
+		if (tileItr == tileList) {
+			maxX = tileItr->rect.x + tileItr->rect.w;
+			maxY = tileItr->rect.y + tileItr->rect.h;
+			minX = tileItr->rect.x;
+			minY = tileItr->rect.y;
+		}
+		if (tileItr->rect.x < minX) {
+			minX = tileItr->rect.x;
+		}
+		else if (tileItr->rect.x + tileItr->rect.w > maxX) {
+			maxX = tileItr->rect.x + tileItr->rect.w;
+		}
+		if (tileItr->rect.y < minY) {
+			minY = tileItr->rect.y;
+		}
+		else if (tileItr->rect.y + tileItr->rect.h > maxY) {
+			maxY = tileItr->rect.y + tileItr->rect.h;
+		}
+		tileItr = (Tile*)tileItr->next;
+	} while (tileItr != nullptr);
+	width = maxX - minX;
+	height = maxY - minY;
+}
+
+void Map::SaveMap() {
+	ofstream output;
+	output.open(path, ofstream::out | ofstream::trunc);
+	Room* roomItr = roomList;
+	do {
+		Tile* tileItr = roomItr->tileList;
+		do {
+			output.write(to_string(tileItr->rect.x).c_str(), to_string(tileItr->rect.x).size());
+			output.write(",",1);
+			output.write(to_string(tileItr->rect.y).c_str(), to_string(tileItr->rect.y).size());
+			output.write(",", 1);
+			output.write(to_string(roomItr->id).c_str(), to_string(roomItr->id).size());
+			output.write(",", 1);
+			output.write(tileItr->texName.c_str(), tileItr->texName.size());
+			output.write(";", 1);
+			if (roomItr->next != nullptr || tileItr->next != nullptr) {
+				output.write("\n",1);
+			}
+			tileItr = (Tile*)tileItr->next;
+		} while (tileItr != nullptr);
+
+		roomItr = roomItr->next;
+	} while (roomItr != nullptr);
+	output.close();
 }

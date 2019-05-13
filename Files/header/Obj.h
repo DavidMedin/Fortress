@@ -26,7 +26,7 @@ public:
 class Tile : public Obj {
 public:
 	bool isWalkable = false;
-	//Tile(int x, int y, int scale);
+	Tile(int x, int y);
 	Tile();
 };
 

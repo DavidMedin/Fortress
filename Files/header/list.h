@@ -12,7 +12,7 @@ namespace list {
 	template <typename T> T* DeleteNode(T*& tarList, T*& target) {
 		T* tmpnt = target;
 		if (tarList == target && target->next != nullptr) {
-			tarList = target->next;
+			tarList = (T*)target->next;
 		}
 		else if (tarList == target && target->next == nullptr) {
 			tarList = nullptr;
@@ -20,7 +20,7 @@ namespace list {
 		else {
 			T* inc = tarList;
 			while (inc->next != target) {
-				inc = inc->next;
+				inc = (T*)inc->next;
 			}
 			if (target->next == nullptr) {
 				inc->next = nullptr;

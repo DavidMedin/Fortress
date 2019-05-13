@@ -7,9 +7,11 @@ Obj::Obj() {
 	relY = 0;
 }
 
-//Tile::Tile(int x, int y, int scale) : Obj(x,y,scale) {
-//	isWalkable = true;
-//}
+Tile::Tile(int x, int y) {
+	isWalkable = true;
+	rect.x = x;
+	rect.y = y;
+}
 Tile::Tile() {
 
 }
