@@ -6,6 +6,8 @@
 void RenderWindow();
 SDL_Texture* ImgLoad(const char* path);
 int NearestTile(int x, int y, bool round);
+void Scale(float change);
+
 
 int main(int argc, char* argv[]) {
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -56,17 +58,18 @@ int main(int argc, char* argv[]) {
 				moveTime->ResetTime();
 			}
 			if (state[SDL_SCANCODE_Q]) {
-				scale += .01f;
+				Scale(.01f);
 				moveTime->ResetTime();
 			}
 			if (state[SDL_SCANCODE_E]) {
-				scale -= .01f;
+				Scale(-.01f);
 				moveTime->ResetTime();
 			}
 			if (isDownOnce(state,SDL_SCANCODE_P) == 1) {
 				isEdit = !isEdit;
 				printf("Edit mode is %s!\n", isEdit ? "On" : "Off");
 			}
+
 		/*	if (did) {
 				moveTime->ResetTime();
 			}*/
@@ -108,6 +111,19 @@ int main(int argc, char* argv[]) {
 	SDL_Quit();
 	return 0;
 }
+
+void Scale(float change) {
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+	int beforeX = (int)floor((float)w / scale) / 2 + offX;
+	int beforeY = (int)floor((float)h / scale) / 2 + offY;
+	printf("%d, %f\n", (int)floor((float)w / scale), ((float)w / scale));
+	scale += change;
+	offX = beforeX - ((int)floor((float)w / scale) / 2);
+	offY = beforeY - ((int)floor((float)h / scale) / 2);
+}
+
+
 int NearestTile(int x,int y,bool round) {
 	int xPos = (int)(((float)x + floor((float)offX * scale)) / scale);
 	int yPos = (int)(((float)y + floor((float)offY * scale)) / scale);
