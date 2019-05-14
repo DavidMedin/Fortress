@@ -21,25 +21,21 @@ int main(int argc, char* argv[]) {
 	hub = new Map("Data/map.map");
 	targetMap = hub;
 	targetRoom = targetMap->roomList;
-	/*room* roomList = nullptr;
-	room* tmpRoom = list::AddNode<room>(roomList);
-	Tile* tmpTile = list::AddNode<Tile>(tmpRoom->tileList);
-	Tile* boi = new Tile;
-	boi->texName = "boi";
-	boi->isWalkable = true;
-	*tmpTile = *boi;
-	*/
+	
+	string input;
 
 	Timer* moveTime = new Timer();
 	int speed = 2;
+
 
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 	SDL_Event event; 
 
 	while (1) {
 		//game loop!!!
-		SDL_PollEvent(&event);
+		
 		if (moveTime->time >= speed) {
+			SDL_PollEvent(&event);
 			bool did = false;
 			if (state[SDL_SCANCODE_A]) {
 				offX -= 1;
@@ -58,27 +54,29 @@ int main(int argc, char* argv[]) {
 				moveTime->ResetTime();
 			}
 			if (state[SDL_SCANCODE_Q]) {
-				Scale(.01f);
+				scale += .01f;
 				moveTime->ResetTime();
 			}
 			if (state[SDL_SCANCODE_E]) {
-				Scale(-.01f);
+				scale -= .01f;
 				moveTime->ResetTime();
 			}
 			if (isDownOnce(state,SDL_SCANCODE_P) == 1) {
 				isEdit = !isEdit;
 				printf("Edit mode is %s!\n", isEdit ? "On" : "Off");
 			}
+			if (event.type == SDL_TEXTINPUT && isTypeing == true) {
+				input.append(event.text.text);
 
-		/*	if (did) {
-				moveTime->ResetTime();
-			}*/
-			//did = false;
+			}
 		}
 		moveTime->UpdateTime();
-		/*if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
-			printf("boi");
-		}*/
+		
+		if (isDownOnce(state, SDL_SCANCODE_RETURN) == 1) {
+			printf("Enter was pressed\n");
+			isTypeing = !isTypeing;
+			SDL_StartTextInput();
+		}
 		if (isEdit) {
 			int x, y;
 			if (isDownOnceMouse(&x, &y,SDL_BUTTON_LEFT) == 1) {
@@ -105,28 +103,21 @@ int main(int argc, char* argv[]) {
 			}
 			
 		}
-		
+		printf("%s\n", input.c_str());
 		RenderWindow();
+		
 	}
 	SDL_Quit();
 	return 0;
 }
 
-void Scale(float change) {
-	int w, h;
-	SDL_GetWindowSize(window, &w, &h);
-	int beforeX = (int)floor((float)w / scale) / 2 + offX;
-	int beforeY = (int)floor((float)h / scale) / 2 + offY;
-	printf("%d, %f\n", (int)floor((float)w / scale), ((float)w / scale));
-	scale += change;
-	offX = beforeX - ((int)floor((float)w / scale) / 2);
-	offY = beforeY - ((int)floor((float)h / scale) / 2);
-}
 
 
 int NearestTile(int x,int y,bool round) {
-	int xPos = (int)(((float)x + floor((float)offX * scale)) / scale);
-	int yPos = (int)(((float)y + floor((float)offY * scale)) / scale);
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+	int xPos = (int)(((float)x + floor((float)offX * scale - (w / 2))) / scale);
+	int yPos = (int)(((float)y + floor((float)offY * scale - (h / 2))) / scale);
 	int xRound = (int)floor((float)xPos / ((float)BASE_SIZE)) * (int)((float)BASE_SIZE);
 	int yRound = (int)floor((float)yPos / (float)BASE_SIZE) * (int)(float)BASE_SIZE;
 	if (round == true) {
@@ -196,11 +187,13 @@ void RenderWindow() {
 			// screen width / w
 			//tmpRect.w *= WIDTH / roomItr->width;
 			//tmpRect.h *= HEIGHT / roomItr->height;
-			
+			int scrW, scrH;
+			SDL_GetWindowSize(window, &scrW, &scrH);
+
 			tmpRect.w = (int)ceil(float(tileItr->rect.w) * scale);
 			tmpRect.h = (int)ceil(float(tileItr->rect.h) * scale);
-			tmpRect.x = (int)floor(float(tileItr->rect.x - offX) * scale);
-			tmpRect.y = (int)floor(float(tileItr->rect.y - offY) * scale);
+			tmpRect.x = (int)floor(float(tileItr->rect.x - offX) * scale + (scrW/2));
+			tmpRect.y = (int)floor(float(tileItr->rect.y - offY) * scale + (scrH/2));
 			
 			// next make a relative coord system and move the camera
 			// then add scaling of camera
