@@ -1,5 +1,4 @@
 #include "../header/Timer.h"
-#include <SDL_timer.h>
 
 Timer::Timer() {
 	temptime = SDL_GetTicks();

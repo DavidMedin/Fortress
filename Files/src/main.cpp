@@ -1,12 +1,20 @@
 #include "../header/main.h"
-#include <string>
-//void RenderWindow();
-//SDL_Texture* ImgLoad(char* path);
+
+using namespace Input;
 
 void RenderWindow();
-SDL_Texture* ImgLoad(const char* path);
-int NearestTile(int x, int y, bool round);
-void Scale(float change);
+
+
+
+SDL_Texture* ImgLoad(const char* path) {
+	SDL_Surface* surface = IMG_Load(path);
+	if (surface == NULL) {
+		printf("%s, did you forget the zlib.dll?\n", IMG_GetError());
+	}
+	SDL_Texture* tmp = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
+	return tmp;
+}
 
 
 int main(int argc, char* argv[]) {
@@ -77,6 +85,7 @@ int main(int argc, char* argv[]) {
 			isTypeing = !isTypeing;
 			SDL_StartTextInput();
 		}
+		if (isTypeing == false) SDL_StopTextInput();
 		if (isEdit) {
 			int x, y;
 			if (isDownOnceMouse(&x, &y,SDL_BUTTON_LEFT) == 1) {
@@ -112,27 +121,10 @@ int main(int argc, char* argv[]) {
 }
 
 
-
-int NearestTile(int x,int y,bool round) {
-	int w, h;
-	SDL_GetWindowSize(window, &w, &h);
-	int xPos = (int)(((float)x + floor((float)offX * scale - (w / 2))) / scale);
-	int yPos = (int)(((float)y + floor((float)offY * scale - (h / 2))) / scale);
-	int xRound = (int)floor((float)xPos / ((float)BASE_SIZE)) * (int)((float)BASE_SIZE);
-	int yRound = (int)floor((float)yPos / (float)BASE_SIZE) * (int)(float)BASE_SIZE;
-	if (round == true) {
-		return x != NULL ? xRound : yRound;
-	}
-	else {
-		return x != NULL ? xPos : yPos;
-	}
-}
-
-
-void RenderWindow() {	
+void RenderWindow() {
 	// fetching and adding the unique textures and putting them into the correct texture lsit
 	Obj* texItr = targetMap->texList;
-	do{
+	do {
 		Texture* mapLoadItr = mapLoadTexes;
 		if (mapLoadTexes != nullptr) {
 			do {
@@ -150,69 +142,62 @@ void RenderWindow() {
 		}
 
 		texItr = texItr->next;
-	}while (texItr != nullptr);
+	} while (texItr != nullptr);
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);
 	SDL_RenderClear(renderer);
-	
+
 	//map rendering
 	// w / roomW * ScreenWidth
 	SDL_Rect tmpRect;
-	
-		Tile* tileItr = targetRoom->tileList;
+
+	Tile* tileItr = targetRoom->tileList;
+	do {
+		SDL_Texture* tmpTex = nullptr;
+		Texture* texLoop = mapLoadTexes;
 		do {
-			SDL_Texture* tmpTex = nullptr;
-			Texture* texLoop = mapLoadTexes;
-			do {
-				if (texLoop->texName->texName == tileItr->texName) {
-					tmpTex = texLoop->tex;
-					break;
-				}
-				texLoop = texLoop->next;
-			} while (texLoop != nullptr);
-			int w, h;
-			SDL_GetWindowSize(window, &w, &h);
-			tmpRect = tileItr->rect;
-
-
-
-
-			static bool lazy = false;
-			if (lazy == false) {
-				int targetLength = targetRoom->width > targetRoom->height ? targetRoom->width : targetRoom->height;
-				scale = float((targetRoom->width == targetLength ? w : h)) / float(targetLength);
-				lazy = true;
+			if (texLoop->texName->texName == tileItr->texName) {
+				tmpTex = texLoop->tex;
+				break;
 			}
-			
-			// screen width / w
-			//tmpRect.w *= WIDTH / roomItr->width;
-			//tmpRect.h *= HEIGHT / roomItr->height;
-			int scrW, scrH;
-			SDL_GetWindowSize(window, &scrW, &scrH);
+			texLoop = texLoop->next;
+		} while (texLoop != nullptr);
+		int w, h;
+		SDL_GetWindowSize(window, &w, &h);
+		tmpRect = tileItr->rect;
 
-			tmpRect.w = (int)ceil(float(tileItr->rect.w) * scale);
-			tmpRect.h = (int)ceil(float(tileItr->rect.h) * scale);
-			tmpRect.x = (int)floor(float(tileItr->rect.x - offX) * scale + (scrW/2));
-			tmpRect.y = (int)floor(float(tileItr->rect.y - offY) * scale + (scrH/2));
-			
-			// next make a relative coord system and move the camera
-			// then add scaling of camera
-			// test multiple rooms
-			if (tmpTex == nullptr) {
-				printf("tmpTex is null");
-			}
-			SDL_RenderCopy(renderer, tmpTex, NULL, &tmpRect);
-			tileItr = (Tile*)tileItr->next;
-		} while (tileItr != nullptr);
+
+
+
+		static bool lazy = false;
+		if (lazy == false) {
+			int targetLength = targetRoom->width > targetRoom->height ? targetRoom->width : targetRoom->height;
+			scale = float((targetRoom->width == targetLength ? w : h)) / float(targetLength);
+			lazy = true;
+		}
+
+		// screen width / w
+		//tmpRect.w *= WIDTH / roomItr->width;
+		//tmpRect.h *= HEIGHT / roomItr->height;
+		int scrW, scrH;
+		SDL_GetWindowSize(window, &scrW, &scrH);
+
+		tmpRect.w = (int)ceil(float(tileItr->rect.w) * scale);
+		tmpRect.h = (int)ceil(float(tileItr->rect.h) * scale);
+		tmpRect.x = (int)floor(float(tileItr->rect.x - offX) * scale + (scrW / 2));
+		tmpRect.y = (int)floor(float(tileItr->rect.y - offY) * scale + (scrH / 2));
+
+		// next make a relative coord system and move the camera
+		// then add scaling of camera
+		// test multiple rooms
+		if (tmpTex == nullptr) {
+			printf("tmpTex is null");
+		}
+		SDL_RenderCopy(renderer, tmpTex, NULL, &tmpRect);
+		tileItr = (Tile*)tileItr->next;
+	} while (tileItr != nullptr);
 	SDL_RenderPresent(renderer);
 }
 
-SDL_Texture* ImgLoad(const char* path) {
-	SDL_Surface* surface = IMG_Load(path);
-	if (surface == NULL) {
-		printf("%s, did you forget the zlib.dll?\n", IMG_GetError());
-	}
-	SDL_Texture* tmp = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_FreeSurface(surface);
-	return tmp;	
-}
+
+
