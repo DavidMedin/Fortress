@@ -1,10 +1,24 @@
 #include "../header/main.h"
 
-using namespace Input;
+
 
 void RenderWindow();
 
 
+int NearestTile(int x, int y, bool round) {
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+	int xPos = (int)(((float)x + floor((float)offX * scale - (w / 2))) / scale);
+	int yPos = (int)(((float)y + floor((float)offY * scale - (h / 2))) / scale);
+	int xRound = (int)floor((float)xPos / (float)BASE_SIZE) * BASE_SIZE;
+	int yRound = (int)floor((float)yPos / (float)BASE_SIZE) * BASE_SIZE;
+	if (round == true) {
+		return x != NULL ? xRound : yRound;
+	}
+	else {
+		return x != NULL ? xPos : yPos;
+	}
+}
 
 SDL_Texture* ImgLoad(const char* path) {
 	SDL_Surface* surface = IMG_Load(path);
@@ -38,61 +52,67 @@ int main(int argc, char* argv[]) {
 
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 	SDL_Event event; 
-
 	while (1) {
 		//game loop!!!
-		
-		if (moveTime->time >= speed) {
-			SDL_PollEvent(&event);
-			bool did = false;
-			if (state[SDL_SCANCODE_A]) {
-				offX -= 1;
-				moveTime->ResetTime();
+		while(SDL_PollEvent(&event)) {
+			if (moveTime->time >= speed) {
+				if (state[SDL_SCANCODE_A]) {
+					offX -= 1;
+					moveTime->ResetTime();
+				}
+				if (state[SDL_SCANCODE_D]) {
+					offX += 1;
+					moveTime->ResetTime();
+				}
+				if (state[SDL_SCANCODE_W]) {
+					offY -= 1;
+					moveTime->ResetTime();
+				}
+				if (state[SDL_SCANCODE_S]) {
+					offY += 1;
+					moveTime->ResetTime();
+				}
+				if (state[SDL_SCANCODE_Q]) {
+					scale += .01f;
+					moveTime->ResetTime();
+				}
+				if (state[SDL_SCANCODE_E]) {
+					scale -= .01f;
+					moveTime->ResetTime();
+				}
+				
 			}
-			if (state[SDL_SCANCODE_D]) {
-				offX += 1;
-				moveTime->ResetTime();
-			}
-			if (state[SDL_SCANCODE_W]) {
-				offY -= 1;
-				moveTime->ResetTime();
-			}
-			if (state[SDL_SCANCODE_S]) {
-				offY += 1;
-				moveTime->ResetTime();
-			}
-			if (state[SDL_SCANCODE_Q]) {
-				scale += .01f;
-				moveTime->ResetTime();
-			}
-			if (state[SDL_SCANCODE_E]) {
-				scale -= .01f;
-				moveTime->ResetTime();
-			}
-			if (isDownOnce(state,SDL_SCANCODE_P) == 1) {
-				isEdit = !isEdit;
-				printf("Edit mode is %s!\n", isEdit ? "On" : "Off");
-			}
-			if (event.type == SDL_TEXTINPUT && isTypeing == true) {
-				input.append(event.text.text);
+			SDL_Scancode keyPressed = event.key.keysym.scancode;
+				if (event.type == SDL_KEYDOWN && event.key.repeat == 0) {
+					if (keyPressed == SDL_SCANCODE_P) {
+						isEdit = !isEdit;
+						printf("Edit mode is %s!\n", isEdit ? "On" : "Off");
+					}
+					if (keyPressed == SDL_SCANCODE_RETURN) {
+						isTypeing = !isTypeing;
+						printf("Typing mode is %s!\n", isTypeing ? "On" : "Off");
+					}
+					if (isTypeing && keyPressed == SDL_SCANCODE_BACKSPACE) {
+						input.pop_back();
+					}
+				}
 
-			}
+				if (event.type == SDL_TEXTINPUT && isTypeing == true) {
+					if (event.key.repeat == 0) {
+						input.append(event.text.text);
+					}
+				}
 		}
 		moveTime->UpdateTime();
+		printf("%s\n", input.c_str());
 		
-		if (isDownOnce(state, SDL_SCANCODE_RETURN) == 1) {
-			printf("Enter was pressed\n");
-			isTypeing = !isTypeing;
-			SDL_StartTextInput();
-		}
-		if (isTypeing == false) SDL_StopTextInput();
 		if (isEdit) {
 			int x, y;
-			if (isDownOnceMouse(&x, &y,SDL_BUTTON_LEFT) == 1) {
+			if (Input::isDownOnceMouse(&x, &y,SDL_BUTTON_LEFT) == 1) {
 				hub->AddTile(NearestTile(x,NULL,true), NearestTile(NULL,y,true), 0, "Data/Grass.png");
 				targetMap->SaveMap();
 			}
-			else if (isDownOnceMouse(&x, &y, SDL_BUTTON_RIGHT) == 1) {
+			else if (Input::isDownOnceMouse(&x, &y, SDL_BUTTON_RIGHT) == 1) {
 				Room* roomItr = hub->roomList;
 				do {
 					Tile* tileItr = roomItr->tileList;
@@ -112,7 +132,6 @@ int main(int argc, char* argv[]) {
 			}
 			
 		}
-		printf("%s\n", input.c_str());
 		RenderWindow();
 		
 	}
