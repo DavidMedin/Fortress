@@ -18,7 +18,7 @@ bool isTypeing = false;
 
  Obj* objList; //might need to add a 'render this' bool to obj tho
  Texture* loadedTextures; // doesn't include the map textures
- Texture* mapLoadTexes;
+ Obj* texLoadQueue;
  SDL_Renderer* renderer;
  SDL_Window* window;
  Map* hub;

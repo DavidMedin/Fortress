@@ -78,6 +78,7 @@ Map::Map(const char* mapPath) {
 		printf("map.txt is empty\n");
 	}
 	else {
+		// add image paths to texList
 		Room* roomItr = roomList;
 		do {
 			Tile* tileItr = roomItr->tileList;

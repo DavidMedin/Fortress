@@ -20,7 +20,7 @@ extern SDL_DisplayMode DM; // only really need for fullscreen mode
 
 extern Obj* objList; //might need to add a 'render this' bool to obj tho
 extern Texture* loadedTextures; // doesn't include the map textures
-extern Texture* mapLoadTexes;
+extern Obj* texLoadQueue;
 extern SDL_Renderer* renderer;
 extern SDL_Window* window;
 extern Map* hub;

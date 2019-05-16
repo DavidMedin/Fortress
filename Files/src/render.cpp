@@ -1,22 +1,23 @@
 #include "../header/render.h"
+
 void RenderWindow() {
 	// fetching and adding the unique textures and putting them into the correct texture lsit
-	Obj* texItr = targetMap->texList;
+	Obj* texItr = texLoadQueue;
 	do {
-		Texture* mapLoadItr = mapLoadTexes;
-		if (mapLoadTexes != nullptr) {
+		Texture* mapLoadItr = loadedTextures;
+		if (texLoadQueue != nullptr) {
 			do {
-				if (mapLoadTexes->texName->texName == texItr->texName) {
+				if (loadedTextures->texName->texName == texItr->texName) {
 					break;
 				}
 				mapLoadItr = mapLoadItr->next;
 			} while (mapLoadItr != nullptr);
 		}
 		if (mapLoadItr == nullptr) {
-			list::AddNode<Texture>(mapLoadTexes);
-			mapLoadTexes->texName = new Obj();
-			mapLoadTexes->texName->texName = texItr->texName;
-			mapLoadTexes->tex = ImgLoad(texItr->texName.c_str());
+			list::AddNode<Texture>(loadedTextures);
+			loadedTextures->texName = new Obj();
+			loadedTextures->texName->texName = texItr->texName;
+			loadedTextures->tex = ImgLoad(texItr->texName.c_str());
 		}
 
 		texItr = texItr->next;
@@ -32,7 +33,7 @@ void RenderWindow() {
 	Tile * tileItr = targetRoom->tileList;
 	do {
 		SDL_Texture* tmpTex = nullptr;
-		Texture* texLoop = mapLoadTexes;
+		Texture* texLoop = loadedTextures;
 		do {
 			if (texLoop->texName->texName == tileItr->texName) {
 				tmpTex = texLoop->tex;
