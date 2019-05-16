@@ -9,24 +9,26 @@
 #include "map.h"
 #define INIT_WIDTH 900
 #define INIT_HEIGHT 600
-#define BASE_SIZE 32
+#define BASE_SIZE 8
 
 
-int offX = 0;
-int offY = 0;
-float scale = 1;
+extern int offX;
+extern int offY;
+extern float scale;
 
-SDL_DisplayMode DM; // only really need for fullscreen mode
+extern SDL_DisplayMode DM; // only really need for fullscreen mode
 
-Obj* objList; //might need to add a 'render this' bool to obj tho
-Texture* loadedTextures; // doesn't include the map textures
-Texture* mapLoadTexes;
-SDL_Renderer* renderer;
-SDL_Window* window;
-Map* hub;
+extern Obj* objList; //might need to add a 'render this' bool to obj tho
+extern Texture* loadedTextures; // doesn't include the map textures
+extern Texture* mapLoadTexes;
+extern SDL_Renderer* renderer;
+extern SDL_Window* window;
+extern Map* hub;
 
-Map* targetMap;
-Room* targetRoom;
+extern string editTexPath;
 
-bool isEdit = true;
-bool isTypeing = false;
+extern Map* targetMap;
+extern Room* targetRoom;
+
+extern bool isEdit;
+extern bool isTypeing;
