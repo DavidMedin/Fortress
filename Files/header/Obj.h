@@ -18,7 +18,7 @@ private:
 
 class Texture {
 public:
-	Obj* texName = nullptr;
+	string texName = nullptr;
 	SDL_Texture* tex = nullptr;
 	Texture* next = nullptr;
 };

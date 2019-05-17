@@ -1,5 +1,3 @@
-#include <SDL.h>
-#include <stdio.h>
 #include "../header/collision.h"
 
 bool collision::BoxPointCollision(SDL_Rect* rect, SDL_Point* point) {

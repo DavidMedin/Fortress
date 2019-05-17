@@ -7,6 +7,8 @@
 #include <conio.h>
 #include <string>
 #include "map.h"
+#include "collision.h"
+#include "image.h"
 #define INIT_WIDTH 900
 #define INIT_HEIGHT 600
 #define BASE_SIZE 8

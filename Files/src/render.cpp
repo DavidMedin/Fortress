@@ -1,34 +1,37 @@
 #include "../header/render.h"
 
 void RenderWindow() {
-	// fetching and adding the unique textures and putting them into the correct texture lsit
-	/*Obj* texItr = texLoadQueue;
-	do {
-		Texture* mapLoadItr = loadedTextures;
-		if (texLoadQueue != nullptr) {
-			do {
-				if (loadedTextures->texName->texName == texItr->texName) {
-					break;
-				}
-				mapLoadItr = mapLoadItr->next;
-			} while (mapLoadItr != nullptr);
-		}
-		if (mapLoadItr == nullptr) {
-			list::AddNode<Texture>(loadedTextures);
-			loadedTextures->texName = new Obj();
-			loadedTextures->texName->texName = texItr->texName;
-			loadedTextures->tex = ImgLoad(texItr->texName.c_str());
-		}
-
-		texItr = texItr->next;
-	} while (texItr != nullptr);*/
+	
 	list::UniqueCpyStr(&targetMap->texList, &texLoadQueue);
 
+	bool used;
 	Obj* texItr = texLoadQueue;
 	do {
-		if()
-
-		texItr = texItr->next;
+		used = false;
+		Obj* mapTileItr = targetMap->roomList->tileList;
+		do {
+			if (mapTileItr->texName == texItr->texName) {
+				SDL_Point tmpPoint = { mapTileItr->rect.x,mapTileItr->rect.y };
+				int w, h;
+				SDL_GetWindowSize(window, &w, &h);
+				SDL_Rect tmpRect = { offX,offY,w,h };
+				printf("%s, %s\n", collision::BoxPointCollision(&tmpRect, &tmpPoint) ? "True" : "False",mapTileItr->texName.c_str());
+				if (collision::BoxPointCollision(&tmpRect, &tmpPoint)) {
+					used = true;
+					break;
+				}
+			}
+			
+			mapTileItr = mapTileItr->next;
+		} while (mapTileItr != nullptr);
+		if (used == true) {
+			list::AddNode<Texture>(loadedTextures);
+			loadedTextures->tex = ImgLoad(texItr->texName.c_str());
+			loadedTextures->texName = texItr->texName;
+		}
+		Obj* next = texItr->next;
+		list::DeleteNode(texLoadQueue, texItr);
+		texItr = next;
 	} while (texItr != nullptr);
 
 
@@ -45,7 +48,7 @@ void RenderWindow() {
 		SDL_Texture* tmpTex = nullptr;
 		Texture* texLoop = loadedTextures;
 		do {
-			if (texLoop->texName->texName == tileItr->texName) {
+			if (texLoop->texName == tileItr->texName) {
 				tmpTex = texLoop->tex;
 				break;
 			}

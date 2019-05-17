@@ -3,20 +3,20 @@
  void list::UniqueCpyStr(Obj** src, Obj** dst) {
 	Obj* srcItr = *src;
 	do {
-		Obj* dstItr = *dst;
+		Obj** dstItr = dst;
 		do {
-			if (dstItr == nullptr) {
-				list::AddNode<Obj>(*dst);
+			if (*dstItr == nullptr) {
+				list::AddNode<Obj>(*dstItr);
 				(*dst)->texName = (*src)->texName;
 				break;
 			}
-			if (srcItr->texName == dstItr->texName) {
+			if (srcItr->texName == (*dstItr)->texName) {
 				break;
 			}
-			dstItr = dstItr->next;
+			*dstItr = (*dstItr)->next;
 		} while (dstItr != nullptr);
 		if (dstItr == nullptr) {
-			list::AddNode<Obj>(*dst);
+			list::AddNode<Obj>(*dstItr);
 			(*dst)->texName = (*src)->texName;
 		}
 
