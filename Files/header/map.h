@@ -4,7 +4,6 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include "obj.h"
 #include "list.h"
 class Room {
 public:

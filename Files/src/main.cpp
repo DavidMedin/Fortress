@@ -1,13 +1,5 @@
 #include "../header/main.h"
 
-
-
-
-
-
-
-
-
 int main(int argc, char* argv[]) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_PNG);
@@ -15,24 +7,15 @@ int main(int argc, char* argv[]) {
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_GetCurrentDisplayMode(0, &DM);
 	
-
-
-
-
 	loadedTextures = nullptr;
 	texLoadQueue = nullptr;
 	hub = new Map("Data/map.map");
 	targetMap = hub;
 	targetRoom = targetMap->roomList;
 	
-
-	 
-
-
 	while (1) {
 
-		//game loop!!!
-		
+		//game loop!!!	
 		Input::CheckInput();
 		if (isEdit) {
 			int x, y;

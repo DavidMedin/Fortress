@@ -2,7 +2,7 @@
 
 void RenderWindow() {
 	// fetching and adding the unique textures and putting them into the correct texture lsit
-	Obj* texItr = texLoadQueue;
+	/*Obj* texItr = texLoadQueue;
 	do {
 		Texture* mapLoadItr = loadedTextures;
 		if (texLoadQueue != nullptr) {
@@ -21,7 +21,17 @@ void RenderWindow() {
 		}
 
 		texItr = texItr->next;
+	} while (texItr != nullptr);*/
+	list::UniqueCpyStr(&targetMap->texList, &texLoadQueue);
+
+	Obj* texItr = texLoadQueue;
+	do {
+		if()
+
+		texItr = texItr->next;
 	} while (texItr != nullptr);
+
+
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);
 	SDL_RenderClear(renderer);
