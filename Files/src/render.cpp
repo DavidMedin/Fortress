@@ -2,7 +2,26 @@
 
 void RenderWindow() {
 	
-	list::UniqueCpyStr(&targetMap->texList, &texLoadQueue);
+	Obj* mapTileItr = targetMap->roomList->tileList;
+	do {
+		Obj* queue = texLoadQueue;
+		do {
+			if (texLoadQueue == nullptr) {
+				list::AddNode<Obj>(texLoadQueue);
+				texLoadQueue->texName = mapTileItr->texName;
+				break;
+			}
+			if (mapTileItr->texName == queue->texName) {
+				break;
+			}
+			queue = queue->next;
+		} while (queue != nullptr);
+		if (queue == nullptr) {
+			list::AddNode<Obj>(texLoadQueue);
+			texLoadQueue->texName = mapTileItr->texName;
+		}
+		mapTileItr = mapTileItr->next;
+	} while (mapTileItr != nullptr);
 
 	bool used;
 	Obj* texItr = texLoadQueue;
@@ -25,7 +44,8 @@ void RenderWindow() {
 			mapTileItr = mapTileItr->next;
 		} while (mapTileItr != nullptr);
 		if (used == true) {
-			list::AddNode<Texture>(loadedTextures);
+			//list::AddNode<Texture>(loadedTextures);
+			Texture* test = new Texture();
 			loadedTextures->tex = ImgLoad(texItr->texName.c_str());
 			loadedTextures->texName = texItr->texName;
 		}

@@ -1,9 +1,14 @@
 #pragma once
 #include "Obj.h"
 namespace list {
-	void UniqueCpyStr(Obj** src, Obj** dst);
 	template <typename T> T* AddNode(T*& target) {
-		T* tmpnt = new T();
+		T* tmpnt;
+		try {
+			tmpnt = new T();
+		}
+		catch (const std::exception e) {
+			tmpnt = new T;
+		}
 
 		if (target != nullptr) {
 			tmpnt->next = target;
