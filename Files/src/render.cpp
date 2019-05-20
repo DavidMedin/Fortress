@@ -2,58 +2,38 @@
 
 void RenderWindow() {
 	
-	Obj* mapTileItr = targetMap->roomList->tileList;
+	Obj* mapTexList = targetMap->texList;
 	do {
-		Obj* queue = texLoadQueue;
-		do {
-			if (texLoadQueue == nullptr) {
-				list::AddNode<Obj>(texLoadQueue);
-				texLoadQueue->texName = mapTileItr->texName;
-				break;
-			}
-			if (mapTileItr->texName == queue->texName) {
-				break;
-			}
-			queue = queue->next;
-		} while (queue != nullptr);
-		if (queue == nullptr) {
-			list::AddNode<Obj>(texLoadQueue);
-			texLoadQueue->texName = mapTileItr->texName;
-		}
-		mapTileItr = mapTileItr->next;
-	} while (mapTileItr != nullptr);
+		list::AddNode<Obj>(texLoadQueue);
+		texLoadQueue->texName = mapTexList->texName;
+		mapTexList = mapTexList->next;
+	} while (mapTexList != nullptr);
 
-	bool used;
-	Obj* texItr = texLoadQueue;
 	do {
-		used = false;
-		Obj* mapTileItr = targetMap->roomList->tileList;
+		Obj* tileItr = targetMap->roomList->tileList;
 		do {
-			if (mapTileItr->texName == texItr->texName) {
-				SDL_Point tmpPoint = { mapTileItr->rect.x,mapTileItr->rect.y };
+			if (texLoadQueue->texName == tileItr->texName) {
 				int w, h;
 				SDL_GetWindowSize(window, &w, &h);
-				SDL_Rect tmpRect = { offX,offY,w,h };
-				printf("%s, %s\n", collision::BoxPointCollision(&tmpRect, &tmpPoint) ? "True" : "False",mapTileItr->texName.c_str());
-				if (collision::BoxPointCollision(&tmpRect, &tmpPoint)) {
-					used = true;
+				SDL_Rect* tmpRect = new SDL_Rect();
+				tmpRect->x = offX;
+				tmpRect->y = offY;
+				tmpRect->w = w;
+				tmpRect->h = h;
+				if (collision::DoubleBoxCollision(&tileItr->rect, tmpRect)) {
+					list::AddNode<Texture>(loadedTextures);
+					loadedTextures->texName = texLoadQueue->texName;
+					loadedTextures->tex = ImgLoad(texLoadQueue->texName.c_str());
+					list::DeleteNode(texLoadQueue, texLoadQueue);
 					break;
 				}
 			}
-			
-			mapTileItr = mapTileItr->next;
-		} while (mapTileItr != nullptr);
-		if (used == true) {
-			//list::AddNode<Texture>(loadedTextures);
-			Texture* test = new Texture();
-			loadedTextures->tex = ImgLoad(texItr->texName.c_str());
-			loadedTextures->texName = texItr->texName;
+			tileItr = tileItr->next;
+		} while (tileItr != nullptr);
+		if (texLoadQueue != nullptr && tileItr == nullptr) {
+			list::DeleteNode(texLoadQueue, texLoadQueue);
 		}
-		Obj* next = texItr->next;
-		list::DeleteNode(texLoadQueue, texItr);
-		texItr = next;
-	} while (texItr != nullptr);
-
+	} while (texLoadQueue != nullptr);
 
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);

@@ -1,7 +1,7 @@
 #include "../header/Input.h"
 
 static SDL_Event event;
-int speed = 2;
+int speed = 8;
 string input;
 Timer* moveTime = new Timer();
 const Uint8* state = SDL_GetKeyboardState(NULL);
@@ -68,11 +68,11 @@ void Input::CheckInput() {
 			moveTime->ResetTime();
 		}
 		if (state[SDL_SCANCODE_Q]) {
-			scale += .01f;
+			scale += .1f;
 			moveTime->ResetTime();
 		}
 		if (state[SDL_SCANCODE_E]) {
-			scale -= .01f;
+			scale -= .1f;
 			moveTime->ResetTime();
 		}
 	}
