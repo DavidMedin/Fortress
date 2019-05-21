@@ -25,13 +25,16 @@ void RenderWindow() {
 					loadedTextures->texName = texLoadQueue->texName;
 					loadedTextures->tex = ImgLoad(texLoadQueue->texName.c_str());
 					list::DeleteNode(texLoadQueue, texLoadQueue);
+					printf(" ");
 					break;
 				}
 			}
 			tileItr = tileItr->next;
 		} while (tileItr != nullptr);
 		if (texLoadQueue != nullptr && tileItr == nullptr) {
+			printf(" ");
 			list::DeleteNode(texLoadQueue, texLoadQueue);
+			printf(" ");
 		}
 	} while (texLoadQueue != nullptr);
 

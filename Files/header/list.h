@@ -16,10 +16,13 @@ namespace list {
 		target = tmpnt;
 		return tmpnt;
 	}
-	template <typename T> T* DeleteNode(T*& tarList, T*& target) {
-		T* tmpnt = target;
-		if (tarList == target && target->next != nullptr) {
+	template <typename T> T* DeleteNode(T** tarList, T** target) {
+		T** tmpnt = *target;
+		// finish pointer pointers, then use tmpnt to 'tag' the target to delete
+		if (tarList == *target && target->next != nullptr) {
+			T* test = (T*)target->next;
 			tarList = (T*)target->next;
+			printf(" ");
 		}
 		else if (tarList == target && target->next == nullptr) {
 			tarList = nullptr;
