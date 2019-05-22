@@ -1,6 +1,5 @@
 #include "../header/list.h"
 
-
 //template <typename T> T* list::AddNode(T*& target) {
 //	T* tmpnt = new T();
 //

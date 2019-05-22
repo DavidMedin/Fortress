@@ -7,7 +7,7 @@
 
 int offX = 0;
 int offY = 0;
-float scale = 1;
+float scale = 0;
 
 string editTexPath = "Data/Grass.png";
 

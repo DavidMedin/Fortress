@@ -1,14 +1,50 @@
 #include "../header/render.h"
 
+void AddToLoaded(string path) {
+	Texture* texItr = loadedTextures;
+	if (texItr != nullptr) {
+		do {
+			if (texItr->texName == path) {
+				break;
+			}
+			texItr = texItr->next;
+		} while (texItr != nullptr);
+		if (texItr == nullptr) {
+			list::AddNode<Texture>(&loadedTextures);
+			loadedTextures->texName = path;
+		}
+	}
+	else {
+
+	}
+		
+}
+
+
 void RenderWindow() {
 	
 	Obj* mapTexList = targetMap->texList;
-	do {
-		list::AddNode<Obj>(texLoadQueue);
-		texLoadQueue->texName = mapTexList->texName;
-		mapTexList = mapTexList->next;
-	} while (mapTexList != nullptr);
-
+	if (mapTexList != nullptr) {
+		do {
+			do {
+				if (texLoadQueue == nullptr) {
+					list::AddNode<Obj>(&texLoadQueue);
+					texLoadQueue->texName = mapTexList->texName;
+				}
+				if (texLoadQueue->texName == mapTexList->texName) {
+					break;
+				}
+				texLoadQueue = texLoadQueue->next;
+			} while (texLoadQueue != nullptr);
+			if (texLoadQueue == nullptr) {
+				list::AddNode<Obj>(&texLoadQueue);
+				texLoadQueue->texName = mapTexList->texName;
+				texLoadQueue = texLoadQueue->next;
+			}
+			mapTexList = mapTexList->next;
+		} while (mapTexList != nullptr);
+	}
+	
 	do {
 		Obj* tileItr = targetMap->roomList->tileList;
 		do {
@@ -21,20 +57,34 @@ void RenderWindow() {
 				tmpRect->w = w;
 				tmpRect->h = h;
 				if (collision::DoubleBoxCollision(&tileItr->rect, tmpRect)) {
-					list::AddNode<Texture>(loadedTextures);
-					loadedTextures->texName = texLoadQueue->texName;
-					loadedTextures->tex = ImgLoad(texLoadQueue->texName.c_str());
-					list::DeleteNode(texLoadQueue, texLoadQueue);
-					printf(" ");
+					Texture* loadItr = loadedTextures;
+					if (loadItr != nullptr) {
+						do {
+							if (loadItr->texName == texLoadQueue->texName) {
+								break;
+							}
+							loadItr = loadItr->next;
+						} while (loadItr != nullptr);
+						if (loadItr == nullptr) {
+							list::AddNode<Texture>(&loadedTextures);
+							loadedTextures->texName = texLoadQueue->texName;
+							loadedTextures->tex = ImgLoad(texLoadQueue->texName.c_str());
+							list::DeleteNode(&texLoadQueue, &texLoadQueue);
+						}
+					}
+					else {
+						list::AddNode<Texture>(&loadedTextures);
+						loadedTextures->texName = texLoadQueue->texName;
+						loadedTextures->tex = ImgLoad(texLoadQueue->texName.c_str());
+						list::DeleteNode(&texLoadQueue, &texLoadQueue);
+					}
 					break;
 				}
 			}
 			tileItr = tileItr->next;
 		} while (tileItr != nullptr);
 		if (texLoadQueue != nullptr && tileItr == nullptr) {
-			printf(" ");
-			list::DeleteNode(texLoadQueue, texLoadQueue);
-			printf(" ");
+			list::DeleteNode(&texLoadQueue, &texLoadQueue);
 		}
 	} while (texLoadQueue != nullptr);
 
@@ -64,12 +114,12 @@ void RenderWindow() {
 
 
 
-		static bool lazy = false;
+		/*static bool lazy = false;
 		if (lazy == false) {
 			int targetLength = targetRoom->width > targetRoom->height ? targetRoom->width : targetRoom->height;
 			scale = float((targetRoom->width == targetLength ? w : h)) / float(targetLength);
 			lazy = true;
-		}
+		}*/
 
 		// screen width / w
 		//tmpRect.w *= WIDTH / roomItr->width;

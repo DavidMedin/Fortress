@@ -48,7 +48,7 @@ Map::Map(const char* mapPath) {
 			Room* itr = roomList;
 			do {
 				if (itr->id == dig) {
-					list::AddNode<Tile>(itr->tileList);
+					list::AddNode<Tile>(&itr->tileList);
 					Tile* tmpNext = (Tile*)roomList->tileList->next;
 					*roomList->tileList = *tmpTile;
 					roomList->tileList->next = tmpNext;
@@ -62,9 +62,9 @@ Map::Map(const char* mapPath) {
 		}
 		else { //this is if there is not a room with the specified id, or if there is no rooms in roomList
 		gelse:;
-			Room* tmpRoom = list::AddNode<Room>(roomList);
+			Room* tmpRoom = list::AddNode<Room>(&roomList);
 			tmpRoom->id = dig;
-			list::AddNode<Tile>(tmpRoom->tileList);
+			list::AddNode<Tile>(&tmpRoom->tileList);
 			Tile* tmpNext = (Tile*)roomList->tileList->next;
 			*roomList->tileList = *tmpTile;
 			roomList->tileList->next = tmpNext;
@@ -86,7 +86,7 @@ Map::Map(const char* mapPath) {
 				Obj* texItr = texList;
 				do {
 					if (texItr == nullptr) {
-						list::AddNode<Obj>(texList);
+						list::AddNode<Obj>(&texList);
 						texList->texName = tileItr->texName.c_str();
 						break;
 					}
@@ -95,7 +95,7 @@ Map::Map(const char* mapPath) {
 					}
 					texItr = texItr->next;
 					if (texItr == nullptr) {
-						list::AddNode<Obj>(texList);
+						list::AddNode<Obj>(&texList);
 						texList->texName = tileItr->texName.c_str();
 					}
 				} while (texItr != nullptr);
@@ -125,10 +125,10 @@ void Map::AddTile(int x, int y, int room, const char* path) {
 		tmpRoom = tmpRoom->next;
 	} while (tmpRoom != nullptr);
 	if (targetRoom == nullptr) {
-		targetRoom = list::AddNode<Room>(roomList);
+		targetRoom = list::AddNode<Room>(&roomList);
 		targetRoom->id = room;
 	}
-	list::AddNode<Tile>(targetRoom->tileList);
+	list::AddNode<Tile>(&targetRoom->tileList);
 	targetRoom->tileList->texName = path;
 	targetRoom->tileList->rect.x = x;
 	targetRoom->tileList->rect.y = y;
