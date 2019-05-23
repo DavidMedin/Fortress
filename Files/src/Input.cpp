@@ -23,10 +23,7 @@ void Input::CheckInput() {
 					SDL_Texture* tex = ImgLoad(input.c_str());
 					if (!(tex == nullptr)) {
 						editTexPath = input;
-						list::AddNode<Obj>(&texLoadQueue);
-						texLoadQueue = new Obj();
-						texLoadQueue->texName = input;
-
+						AddToLoaded(input);
 						printf("\n");
 					}
 					else printf("that texture doesn't exist!\n");

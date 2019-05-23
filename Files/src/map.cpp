@@ -40,6 +40,7 @@ Map::Map(const char* mapPath) {
 		} while (input.back() != ';');
 		input.pop_back(); //gets rid of the ;
 		tmpTile->texName = input;
+		printf("%s\n", input.c_str());
 		SDL_Surface* surf = IMG_Load(input.c_str());
 		tmpTile->rect.w = surf->w;
 		tmpTile->rect.h = surf->h;
@@ -67,7 +68,7 @@ Map::Map(const char* mapPath) {
 			list::AddNode<Tile>(&tmpRoom->tileList);
 			Tile* tmpNext = (Tile*)roomList->tileList->next;
 			*roomList->tileList = *tmpTile;
-			roomList->tileList->next = tmpNext;
+			roomList->tileList->next = tmpNext;		
 		}
 		input.clear();
 		char trash = mapFile.get(); //this is for the newLine at the end of each line (duh)

@@ -15,78 +15,61 @@ void AddToLoaded(string path) {
 		}
 	}
 	else {
-
+		list::AddNode<Texture>(&loadedTextures);
+		loadedTextures->texName = path;
+		printf(" ");
 	}
-		
 }
 
 
 void RenderWindow() {
-	
-	Obj* mapTexList = targetMap->texList;
-	if (mapTexList != nullptr) {
-		do {
-			do {
-				if (texLoadQueue == nullptr) {
-					list::AddNode<Obj>(&texLoadQueue);
-					texLoadQueue->texName = mapTexList->texName;
-				}
-				if (texLoadQueue->texName == mapTexList->texName) {
-					break;
-				}
-				texLoadQueue = texLoadQueue->next;
-			} while (texLoadQueue != nullptr);
-			if (texLoadQueue == nullptr) {
-				list::AddNode<Obj>(&texLoadQueue);
-				texLoadQueue->texName = mapTexList->texName;
-				texLoadQueue = texLoadQueue->next;
-			}
-			mapTexList = mapTexList->next;
-		} while (mapTexList != nullptr);
-	}
-	
+
+	//add map tilelist to loadedtexture
+	Obj* texItr = targetMap->texList;
 	do {
-		Obj* tileItr = targetMap->roomList->tileList;
+		AddToLoaded(texItr->texName);
+		texItr = texItr->next;
+	} while (texItr != nullptr);
+
+
+	// if the loaded tex isn't used, trash it, otherwise check if it loaded, if not, load
+	Texture* loadedItr = loadedTextures;
+	if (loadedItr == nullptr) {
+		printf("loadedTextures is nullptr!\n");
+	}
+	else {
 		do {
-			if (texLoadQueue->texName == tileItr->texName) {
-				int w, h;
-				SDL_GetWindowSize(window, &w, &h);
-				SDL_Rect* tmpRect = new SDL_Rect();
-				tmpRect->x = offX;
-				tmpRect->y = offY;
-				tmpRect->w = w;
-				tmpRect->h = h;
-				if (collision::DoubleBoxCollision(&tileItr->rect, tmpRect)) {
-					Texture* loadItr = loadedTextures;
-					if (loadItr != nullptr) {
-						do {
-							if (loadItr->texName == texLoadQueue->texName) {
-								break;
+			Tile* tileItr = targetMap->roomList->tileList;
+			if (tileItr != nullptr) {
+				do {
+					if (tileItr->texName == loadedItr->texName) {
+						SDL_Rect tmprect;
+						int w, h;
+						SDL_GetWindowSize(window, &w, &h);
+						tmprect.w = w;
+						tmprect.h = h;
+						tmprect.x = offX;
+						tmprect.y = offY;
+						if (collision::DoubleBoxCollision(&tmprect, &tileItr->rect)) {
+							if (loadedItr->tex == nullptr) {
+								loadedItr->tex = ImgLoad(loadedItr->texName.c_str());
 							}
-							loadItr = loadItr->next;
-						} while (loadItr != nullptr);
-						if (loadItr == nullptr) {
-							list::AddNode<Texture>(&loadedTextures);
-							loadedTextures->texName = texLoadQueue->texName;
-							loadedTextures->tex = ImgLoad(texLoadQueue->texName.c_str());
-							list::DeleteNode(&texLoadQueue, &texLoadQueue);
+							break;
 						}
 					}
-					else {
-						list::AddNode<Texture>(&loadedTextures);
-						loadedTextures->texName = texLoadQueue->texName;
-						loadedTextures->tex = ImgLoad(texLoadQueue->texName.c_str());
-						list::DeleteNode(&texLoadQueue, &texLoadQueue);
-					}
-					break;
+					tileItr = (Tile*)tileItr->next;
+				} while (tileItr != nullptr);
+				if (tileItr == nullptr) {
+					list::DeleteNode<Texture>(&loadedTextures, &loadedItr);
 				}
 			}
-			tileItr = tileItr->next;
-		} while (tileItr != nullptr);
-		if (texLoadQueue != nullptr && tileItr == nullptr) {
-			list::DeleteNode(&texLoadQueue, &texLoadQueue);
-		}
-	} while (texLoadQueue != nullptr);
+
+			loadedItr = loadedItr->next;
+		} while (loadedItr != nullptr);
+	}
+	
+	
+
 
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);
