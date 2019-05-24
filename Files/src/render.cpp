@@ -30,6 +30,8 @@ void RenderWindow() {
 		texItr = texItr->next;
 	} while (texItr != nullptr);
 
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);
+	SDL_RenderClear(renderer);
 
 	// if the loaded tex isn't used, trash it, otherwise check if it loaded, if not, load
 	Texture* loadedItr = loadedTextures;
@@ -47,10 +49,17 @@ void RenderWindow() {
 						SDL_Rect tmprect;
 						int w, h;
 						SDL_GetWindowSize(window, &w, &h);
-						tmprect.w = (int)((float)w * scale);
-						tmprect.h = (int)((float)h * scale);
+						tmprect.w = (int)((float)w / scale);
+						tmprect.h = (int)((float)h / scale);
 						tmprect.x = offX;
 						tmprect.y = offY;
+						printf("%d\n", tmprect.x);
+						SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+						SDL_RenderDrawLine(renderer, tmprect.x, tmprect.y, tmprect.x + (int)((float)tmprect.w / scale), tmprect.y);
+						SDL_RenderDrawLine(renderer, (int)(float)tmprect.w / scale, tmprect.y, (int)(float)tmprect.w / scale, tmprect.y + tmprect.h);
+						SDL_RenderDrawLine(renderer, (int)(float)tmprect.w / scale, tmprect.y + tmprect.h, tmprect.x, tmprect.y + tmprect.h);
+						SDL_RenderDrawLine(renderer, tmprect.x, tmprect.y, tmprect.x, tmprect.y);
+
 						if (collision::DoubleBoxCollision(&tmprect, &tileItr->rect)) {
 							if (loadedItr->tex == nullptr) {
 								loadedItr->tex = ImgLoad(loadedItr->texName.c_str());
@@ -73,8 +82,7 @@ void RenderWindow() {
 
 
 
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 225);
-	SDL_RenderClear(renderer);
+
 
 	//map rendering
 	// w / roomW * ScreenWidth
@@ -111,6 +119,18 @@ void RenderWindow() {
 		int scrW, scrH;
 		SDL_GetWindowSize(window, &scrW, &scrH);
 
+
+
+		//int w, h;
+		//////SDL_GetWindowSize(window, &w, &h);
+		//printf("%f\n", offX + w / scale);
+		//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		//SDL_RenderDrawLine(renderer, offX, offY, offX + w / scale, offY);
+		//SDL_RenderDrawLine(renderer, offX + w / scale, offY, offX + w / scale, offY + h / scale);
+		//SDL_RenderDrawLine(renderer, offX + w / scale, offY + h / scale, offX, offY + h / scale);
+		//SDL_RenderDrawLine(renderer, offX, offY + h / scale, offX, offY);
+		//SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+
 		tmpRect.w = (int)ceil(float(tileItr->rect.w) * scale);
 		tmpRect.h = (int)ceil(float(tileItr->rect.h) * scale);
 		tmpRect.x = (int)floor(float(tileItr->rect.x - offX) * scale + (scrW / 2));
@@ -120,7 +140,7 @@ void RenderWindow() {
 		// then add scaling of camera
 		// test multiple rooms
 		if (tmpTex == nullptr) {
-			printf("tmpTex is null\n");
+			//printf("tmpTex is null\n");
 		}
 		SDL_RenderCopy(renderer, tmpTex, NULL, &tmpRect);
 		tileItr = (Tile*)tileItr->next;
