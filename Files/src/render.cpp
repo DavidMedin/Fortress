@@ -23,7 +23,6 @@ void AddToLoaded(string path) {
 
 
 void RenderWindow() {
-
 	//add map tilelist to loadedtexture
 	Obj* texItr = targetMap->texList;
 	do {
@@ -41,13 +40,15 @@ void RenderWindow() {
 		do {
 			Tile* tileItr = targetMap->roomList->tileList;
 			if (tileItr != nullptr) {
-				do {
+				do 
+				{
+					if (tileItr == nullptr) printf("problem");
 					if (tileItr->texName == loadedItr->texName) {
 						SDL_Rect tmprect;
 						int w, h;
 						SDL_GetWindowSize(window, &w, &h);
-						tmprect.w = w;
-						tmprect.h = h;
+						tmprect.w = (int)((float)w * scale);
+						tmprect.h = (int)((float)h * scale);
 						tmprect.x = offX;
 						tmprect.y = offY;
 						if (collision::DoubleBoxCollision(&tmprect, &tileItr->rect)) {
@@ -59,12 +60,12 @@ void RenderWindow() {
 					}
 					tileItr = (Tile*)tileItr->next;
 				} while (tileItr != nullptr);
-				if (tileItr == nullptr) {
-					list::DeleteNode<Texture>(&loadedTextures, &loadedItr);
-				}
 			}
-
-			loadedItr = loadedItr->next;
+			if (tileItr == nullptr) {
+				Texture* tmpObj = loadedItr->next;
+				list::DeleteNode<Texture>(&loadedTextures, &loadedItr);
+				loadedItr = tmpObj;
+			}else loadedItr = loadedItr->next;
 		} while (loadedItr != nullptr);
 	}
 	

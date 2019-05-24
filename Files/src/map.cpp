@@ -118,18 +118,18 @@ Map::Map(const char* mapPath) {
 void Map::AddTile(int x, int y, int room, const char* path) {
 	Room* targetRoom = nullptr;
 	Room* tmpRoom = roomList;
-	do {
+	do { // iterates through the rooms and find the maching id
 		if (tmpRoom->id == room) {
 			targetRoom = tmpRoom;
 			break;
 		}
 		tmpRoom = tmpRoom->next;
 	} while (tmpRoom != nullptr);
-	if (targetRoom == nullptr) {
+	if (targetRoom == nullptr) { // if it got through the iterator, and no match, then make a new room
 		targetRoom = list::AddNode<Room>(&roomList);
 		targetRoom->id = room;
 	}
-	list::AddNode<Tile>(&targetRoom->tileList);
+	list::AddNode<Tile>(&targetRoom->tileList); // creates a new tile in the room
 	targetRoom->tileList->texName = path;
 	targetRoom->tileList->rect.x = x;
 	targetRoom->tileList->rect.y = y;
@@ -137,6 +137,17 @@ void Map::AddTile(int x, int y, int room, const char* path) {
 	targetRoom->tileList->rect.w = surf->w;
 	targetRoom->tileList->rect.h = surf->h;
 	SDL_FreeSurface(surf);
+	Obj* texItr = texList;
+	do {
+		if (texItr->texName == path) {
+			break;
+		}
+		texItr = texItr->next;
+	} while (texItr != nullptr);
+	if (texItr == nullptr) {
+		list::AddNode<Obj>(&texList);
+		texList->texName = path;
+	}
 }
 
 Room::Room() {

@@ -16,14 +16,14 @@ int main(int argc, char* argv[]) {
 
 	while (1) {
 		//game loop!!!	
-		Texture* texItr = loadedTextures;
+		/*Texture* texItr = loadedTextures;
 		if(texItr != nullptr){
 			do {
 				printf("%s,", texItr->texName.c_str());
 				texItr = texItr->next;
 			} while (texItr != nullptr);
 			printf("\n");
-		}
+		}*/
 		
 
 
@@ -31,9 +31,9 @@ int main(int argc, char* argv[]) {
 		if (isEdit) {
 			int x, y;
 			if (Input::isDownOnceMouse(&x, &y,SDL_BUTTON_LEFT) == 1) {
-				Obj* tmpObj = new Obj();
+				/*Obj* tmpObj = new Obj();
 				tmpObj->texName = editTexPath;
-				list::AddNode<Obj>(&tmpObj);
+				list::AddNode<Obj>(&tmpObj);*/
 				hub->AddTile(Input::NearestTile(x,NULL,true), Input::NearestTile(NULL,y,true), 0, editTexPath.c_str());
 				targetMap->SaveMap();
 			}
