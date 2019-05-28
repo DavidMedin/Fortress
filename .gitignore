@@ -4,6 +4,7 @@
 !Data
 !Data/*.png
 !Data/*.map
+!Data/*.aseprite
 !Files
 !Files/header
 !Files/header/*.h

@@ -15,7 +15,9 @@ int main(int argc, char* argv[]) {
 	scale = 5.6f;
 
 	while (1) {
-		//game loop!!!	
+		////game loop!!!	
+		
+		
 		/*Texture* texItr = loadedTextures;
 		if(texItr != nullptr){
 			do {
@@ -24,8 +26,6 @@ int main(int argc, char* argv[]) {
 			} while (texItr != nullptr);
 			printf("\n");
 		}*/
-		
-
 
 		Input::CheckInput();
 		if (isEdit) {

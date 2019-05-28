@@ -21,9 +21,11 @@ class Map {
 public:
 	Obj* texList = nullptr; // use the ->name in object for storing strings in lists
 	Room* roomList = nullptr;
+	Actor* actorList = nullptr;
 	const char* path;
 	Map(const char* mapPath);
 	void AddTile(int x,int y,int room, const char* path);
+	void AddActor(int x, int y, const char* path);
 	void SaveMap();
 };
 

@@ -16,7 +16,6 @@ bool isTypeing = false;
 
  SDL_DisplayMode DM; // only really need for fullscreen mode
 
- Obj* objList; //might need to add a 'render this' bool to obj tho
  Texture* loadedTextures; // doesn't include the map textures
  Obj* texLoadQueue;
  SDL_Renderer* renderer;

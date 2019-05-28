@@ -6,6 +6,21 @@ Obj::Obj() {
 	relX = 0;
 	relY = 0;
 }
+bool Obj::IsInView() {
+	extern SDL_Window* window;
+	extern int offX;
+	extern int offY;
+	extern float scale;
+	SDL_Rect tmprect;
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+	tmprect.w = (int)((float)w / scale);
+	tmprect.h = (int)((float)h / scale);
+	tmprect.x = offX - ((int)((float)w / scale) / 2); // real to virtual
+	tmprect.y = offY - ((int)((float)h / scale) / 2);
+	return collision::DoubleBoxCollision(&tmprect, &rect);
+}
+
 
 Tile::Tile(int x, int y) {
 	isWalkable = true;
@@ -13,5 +28,9 @@ Tile::Tile(int x, int y) {
 	rect.y = y;
 }
 Tile::Tile() {
+
+}
+
+Actor::Actor() {
 
 }

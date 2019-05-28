@@ -1,12 +1,14 @@
 #pragma once
 #include <SDL.h>
 #include <string>
+#include "collision.h"
 using namespace std;
 
 
 class Obj {
 public:
 	Obj();
+	bool IsInView();
 	const char* name = nullptr;
 	SDL_Rect rect;
 	string texName;
@@ -30,3 +32,13 @@ public:
 	Tile();
 };
 
+class Actor : public Obj {
+public: 
+	Actor();
+	float mass;
+	bool hasGravity;
+};
+
+//force
+//momentum
+//acceleration
