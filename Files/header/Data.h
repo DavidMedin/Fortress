@@ -12,6 +12,10 @@
 #define INIT_WIDTH 900
 #define INIT_HEIGHT 600
 #define BASE_SIZE 8
+//image standard design
+#define GUARD_W 26
+#define GUARD_H 24
+
 
 
 extern int offX;

@@ -2,6 +2,9 @@
 #include <SDL.h>
 #include <string>
 #include "collision.h"
+#include "Timer.h"
+#define GUARD_SPEED 500
+const int GUARD_IDLE[2]{ 1,4 }; 
 using namespace std;
 
 
@@ -9,13 +12,15 @@ class Obj {
 public:
 	Obj();
 	bool IsInView();
+	void ChangeAnimation(const int ani[2],int tmpSpeed);
 	const char* name = nullptr;
 	SDL_Rect rect;
 	string texName;
 	Obj* next = nullptr;
-private:
-	int relX, relY;
-
+	int frame = 1;
+	Timer* frameTimer;
+	int speed;
+	int animation[2];
 };
 
 class Texture {

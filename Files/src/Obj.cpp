@@ -3,8 +3,7 @@
 Obj::Obj() {
 	name = "here";
 	rect = { 0 };
-	relX = 0;
-	relY = 0;
+	frameTimer = new Timer();
 }
 bool Obj::IsInView() {
 	extern SDL_Window* window;
@@ -20,7 +19,10 @@ bool Obj::IsInView() {
 	tmprect.y = offY - ((int)((float)h / scale) / 2);
 	return collision::DoubleBoxCollision(&tmprect, &rect);
 }
-
+void Obj::ChangeAnimation(const int ani[2], int tmpSpeed) {
+	memcpy(animation, ani, sizeof(int) * 2);
+	speed = tmpSpeed;
+}
 
 Tile::Tile(int x, int y) {
 	isWalkable = true;

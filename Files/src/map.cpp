@@ -1,4 +1,5 @@
 #include "../header/map.h"
+
 using namespace std;
 extern SDL_Texture* ImgLoad(const char* path);
 
@@ -62,10 +63,20 @@ Map::Map(const char* mapPath) {
 		} while (input.back() != ';');
 		input.pop_back(); //gets rid of the ;
 		tmpTile->texName = input;
-		SDL_Surface* surf = IMG_Load(input.c_str());
-		tmpTile->rect.w = surf->w;
-		tmpTile->rect.h = surf->h;
-		SDL_FreeSurface(surf);
+		//########################
+		if (input == "Data/Guard.png") {
+			tmpTile->rect.w = 26;
+			tmpTile->rect.h = 24;
+			tmpTile->speed = GUARD_SPEED;
+			memcpy(tmpTile->animation, GUARD_IDLE,sizeof(int)*2);
+		}
+		else {
+			SDL_Surface* surf = IMG_Load(input.c_str());
+			tmpTile->rect.w = surf->w;
+			tmpTile->rect.h = surf->h;
+			SDL_FreeSurface(surf);
+		}
+		
 		if (type == false) {
 			if (roomList != nullptr) {
 				Room* itr = roomList;
@@ -157,38 +168,51 @@ Map::Map(const char* mapPath) {
 }
 
 void Map::AddTile(int x, int y, int room, const char* path) {
-	Room* targetRoom = nullptr;
-	Room* tmpRoom = roomList;
-	do { // iterates through the rooms and find the maching id
-		if (tmpRoom->id == room) {
-			targetRoom = tmpRoom;
-			break;
+	if (path != nullptr) {
+		Room* targetRoom = nullptr;
+		Room* tmpRoom = roomList;
+		do { // iterates through the rooms and find the maching id
+			if (tmpRoom->id == room) {
+				targetRoom = tmpRoom;
+				break;
+			}
+			tmpRoom = tmpRoom->next;
+		} while (tmpRoom != nullptr);
+		if (targetRoom == nullptr) { // if it got through the iterator, and no match, then make a new room
+			targetRoom = list::AddNode<Room>(&roomList);
+			targetRoom->id = room;
 		}
-		tmpRoom = tmpRoom->next;
-	} while (tmpRoom != nullptr);
-	if (targetRoom == nullptr) { // if it got through the iterator, and no match, then make a new room
-		targetRoom = list::AddNode<Room>(&roomList);
-		targetRoom->id = room;
-	}
-	list::AddNode<Tile>(&targetRoom->tileList); // creates a new tile in the room
-	targetRoom->tileList->texName = path;
-	targetRoom->tileList->rect.x = x;
-	targetRoom->tileList->rect.y = y;
-	SDL_Surface* surf = IMG_Load(path);
-	targetRoom->tileList->rect.w = surf->w;
-	targetRoom->tileList->rect.h = surf->h;
-	SDL_FreeSurface(surf);
-	Obj* texItr = texList;
-	do {
-		if (texItr->texName == path) {
-			break;
+		list::AddNode<Tile>(&targetRoom->tileList); // creates a new tile in the room
+		targetRoom->tileList->texName = path;
+		targetRoom->tileList->rect.x = x;
+		targetRoom->tileList->rect.y = y;
+
+		//###########################
+		if (path == "Data/Guard.png") {
+			targetRoom->tileList->rect.w = 26;
+			targetRoom->tileList->rect.h = 24;
+			targetRoom->tileList->speed = GUARD_SPEED;
+			memcpy(targetRoom->tileList->animation, GUARD_IDLE, sizeof(int) * 2);
 		}
-		texItr = texItr->next;
-	} while (texItr != nullptr);
-	if (texItr == nullptr) {
-		list::AddNode<Obj>(&texList);
-		texList->texName = path;
+		else {
+			SDL_Surface* surf = IMG_Load(path);
+			targetRoom->tileList->rect.w = surf->w;
+			targetRoom->tileList->rect.h = surf->h;
+			SDL_FreeSurface(surf);
+		}
+		Obj* texItr = texList;
+		do {
+			if (texItr->texName == path) {
+				break;
+			}
+			texItr = texItr->next;
+		} while (texItr != nullptr);
+		if (texItr == nullptr) {
+			list::AddNode<Obj>(&texList);
+			texList->texName = path;
+		}
 	}
+	
 }
 
 Room::Room() {

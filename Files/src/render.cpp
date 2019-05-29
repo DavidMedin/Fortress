@@ -127,7 +127,16 @@ void RenderWindow() {
 		if (tmpTex == nullptr) {
 			//printf("tmpTex is null\n");
 		}
-		SDL_RenderCopy(renderer, tmpTex, NULL, &tmpRect);
+		if (tileItr->frameTimer->time >= tileItr->speed) {
+			tileItr->frame++;
+			if(tileItr->frame ==)
+			tileItr->frameTimer->ResetTime();
+		}
+		SDL_Rect sprite = tileItr->rect;
+		sprite.y = 0;
+		sprite.x = tileItr->frame * tileItr->rect.w;
+		SDL_RenderCopy(renderer, tmpTex, &sprite, &tmpRect);//tile
+		tileItr->frameTimer->UpdateTime();
 		tileItr = (Tile*)tileItr->next;
 	} while (tileItr != nullptr);
 	Actor* actorItr = targetMap->actorList;
@@ -149,7 +158,15 @@ void RenderWindow() {
 					tmpRect.h = VirtualSize(actorItr->rect.h);
 					tmpRect.x = VirtToReal(actorItr->rect.x, 1);
 					tmpRect.y = VirtToReal(actorItr->rect.y, 0);
-					SDL_RenderCopy(renderer, texItr->tex, NULL, &tmpRect);
+					if (actorItr->frameTimer->time >= actorItr->speed) {
+						actorItr->frame++;
+						actorItr->frameTimer->ResetTime();
+					}
+					SDL_Rect sprite = actorItr->rect;
+					sprite.y = 0;
+					sprite.x = tileItr->frame * actorItr->rect.w;
+					SDL_RenderCopy(renderer, texItr->tex, &sprite, &tmpRect);//actor
+					actorItr->frameTimer->UpdateTime();
 				}
 			}
 			else {
