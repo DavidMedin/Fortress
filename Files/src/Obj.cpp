@@ -1,5 +1,13 @@
 #include "../header/Obj.h"
 
+Vector::Vector(){
+
+}
+
+void Vector::NormalizeVector() {
+	
+}
+
 Obj::Obj() {
 	name = "here";
 	rect = { 0 };

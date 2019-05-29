@@ -129,7 +129,9 @@ void RenderWindow() {
 		}
 		if (tileItr->frameTimer->time >= tileItr->speed) {
 			tileItr->frame++;
-			if(tileItr->frame ==)
+			if (tileItr->frame >= tileItr->animation[1]) {
+				tileItr->frame = tileItr->animation[0];
+			}
 			tileItr->frameTimer->ResetTime();
 		}
 		SDL_Rect sprite = tileItr->rect;
@@ -160,6 +162,9 @@ void RenderWindow() {
 					tmpRect.y = VirtToReal(actorItr->rect.y, 0);
 					if (actorItr->frameTimer->time >= actorItr->speed) {
 						actorItr->frame++;
+						if (tileItr->frame >= tileItr->animation[1]) {
+							tileItr->frame = tileItr->animation[0];
+						}
 						actorItr->frameTimer->ResetTime();
 					}
 					SDL_Rect sprite = actorItr->rect;

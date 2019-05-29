@@ -3,10 +3,17 @@
 #include <string>
 #include "collision.h"
 #include "Timer.h"
-#define GUARD_SPEED 500
-const int GUARD_IDLE[2]{ 1,4 }; 
+#include "animations.h"
 using namespace std;
 
+class Vector {
+public:
+	Vector();
+	void NormalizeVector();
+	int x, y;
+	int mag;//newtons
+	Vector* next = nullptr;
+};
 
 class Obj {
 public:
@@ -17,10 +24,15 @@ public:
 	SDL_Rect rect;
 	string texName;
 	Obj* next = nullptr;
+	//physics
+	int mass;
+	vector* vectList = nullptr;
+	//animation
 	int frame = 1;
 	Timer* frameTimer;
 	int speed;
 	int animation[2];
+
 };
 
 class Texture {
