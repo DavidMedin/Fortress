@@ -6,12 +6,15 @@
 #include "animations.h"
 using namespace std;
 
+// 1 meter = 13 px
+
+
 class Vector {
 public:
 	Vector();
 	void NormalizeVector();
 	int x, y;
-	int mag;//newtons
+	int mag;//newtons (1 newton -> 1 kg -> 1 km/s
 	Vector* next = nullptr;
 };
 
@@ -25,8 +28,8 @@ public:
 	string texName;
 	Obj* next = nullptr;
 	//physics
-	int mass;
-	vector* vectList = nullptr;
+	int mass; //men -> 88 kg women -> 77 kg
+	Vector* vectList = nullptr;
 	//animation
 	int frame = 1;
 	Timer* frameTimer;

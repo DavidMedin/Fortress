@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
 	scale = 5.6f;
 
 	while (1) {
+		physics::MainPhysics();
 		////game loop!!!	
 		
 		
@@ -57,6 +58,7 @@ int main(int argc, char* argv[]) {
 			}
 			
 		}
+		
 		RenderWindow();
 		
 	}
