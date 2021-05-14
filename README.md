@@ -1,6 +1,7 @@
+
 # What is it?
 This was a project I did to learn how to use SDL2 and C++. It only has a map editor really, as well as some basic animation running.
-
+![FortressDemo](https://user-images.githubusercontent.com/45665232/118218822-de44fd00-b43d-11eb-9185-c03bbfc16dd1.png)
 # How to use?
 * WASD -> Moves camera
 * Left Click -> places last loaded through 'typing mode' (dirt by default) tile
